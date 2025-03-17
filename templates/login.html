@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <script type="text/javascript" src="../static/app.js"></script>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title class="centre">La tour des livres</title>
 </head>
 <body>
+    <h1>La tour des livres</h1>
+
+    <form action="login" method="post">
+    <p>Courriel: <input type="text" name="courriel"><br>
+    Mot de passe: <input type="password" name="motpasse"><br>
+
+        <input type="submit" value="Connexion" name="soumettre">
+    </p>
+</form>
+
+<p>
+    Si vous n'avez pas de compte:
+    <input type="button" value="Créer un compte" onclick="window.location.href='/inscription';">
+</p>
 
 </body>
 </html>
