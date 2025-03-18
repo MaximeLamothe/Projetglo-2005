@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
-    <script type="text/javascript" src="../static/app.js"></script>
+    <script defer type="text/javascript" src="../static/app.js"></script>
     <meta charset="UTF-8">
     <title>La tour des livres</title>
 </head>
@@ -10,15 +10,19 @@
 <body>
     <h1>La tour des livres</h1>
 
-    <form action="login" method="post">
-    <p> <label for="courriel">Courriel:</label>
-        <input type="text" id="courriel" name="courriel"><br>
-        <label for="motpasse">Mot de passe:</label>
-        <input type="password" id="motpasse" name="motpasse"><br>
-
-        <input type="submit" value="Connexion" name="soumettre">
+    <form id="emailForm" action="login" method="post">
+    <p> <label for="courriel">Courriel</label><br>
+        <input type="email" id="courriel" name="courriel" placeholder="Entrez votre courriel" value="{{email if email}}" required><br>
+        <label for="motpasse">Mot de passe</label><br>
+        <input type="password" id="motpasse" name="motpasse" required><br>
     </p>
-</form>
+    <p id="error-message" style="color: red;"></p>
+
+    <p>
+        <input type="submit" value="Connexion" name="soumettre">
+        <input type="reset" value="Recommencer">
+    </p>
+    </form>
 
 {% if message %}
 <div id="cadre">{{ message }}</div>

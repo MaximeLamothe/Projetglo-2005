@@ -5,6 +5,7 @@ from setuptools.command.easy_install import sys_executable
 from database import Database
 
 app = Flask(__name__)
+app.secret_key = '9588203'
 
 database = Database()
 
@@ -17,6 +18,8 @@ def login():
     if request.method == "POST":
         courriel = request.form.get("courriel")
         passe = request.form.get("motpasse")
+
+        # TODO: valider format du courriel
 
         # TODO: corriger la requête dans la BD
         cmd = 'SELECT motpasse FROM Utilisateurs WHERE courriel = %s;'
@@ -70,10 +73,8 @@ def inscription():
 @app.route("/logout")
 def logout():
     if 'user' in session:
-        user = session['user']
         flash("Vous avez été déconnecté!", "info")
-    session.pop("user", None)
-
+        session.pop("user", None)
     return redirect(url_for('login'))
 
 @app.route("/auteur/")
