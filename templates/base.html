@@ -1,17 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <script type="text/javascript" src="../static/app.js"></script>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-  <h1>La tour des livres</h1>
+  <div class="header">
+  <a href="#default" class="titre">La tour des livres</a>
+      <a class = "header-centre" href="/recherche">Recherche</a>
+  <div class="header-right">
+    <div class="dropdown">
+    <button class="dropbtn">Utilisateur
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/profil">Profil</a>
+      <a href="/mabiblio/">Bibli perso</a>
+      <a href="/logout">Se déconnecter</a>
+    </div>
+  </div>
+  </div>
+</div>
+
   {% block content %}
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for msg in messages %}
             <p> {{ msg }}</p>
-
+        {% endfor %}
+    {%endif%}
+  {%endwith%}
   {% endblock %}
 </body>
 </html>

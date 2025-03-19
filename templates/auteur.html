@@ -1,33 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" type="text/css" href="../static/styles.css">
-    <script type="text/javascript" src="../static/app.js"></script>
-    <meta charset="UTF-8">
-    <title>Auteur</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<div class="fleft">
-        <p>Photo ici</p>
-    </div>
-    <div class="fcenter">
-      <p>Section 2</p>
+{% block title %}Auteur{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="column">
+      <p>Photo ici</p>
+  </div>
+
+  <div class="column">
       Nom: {{prenom}} {{nom}}<br>
       Style: {{style}}<br>
       Note: {{note}}<br>
-    </div>
-    <div class="fright">
-        <p>Section 3</p>
-        <form action="" method="post">
+
+      <form action="" method="post">
         <input type="button" value="Ajouter comme auteur préféré" onclick="Fonction()"><br>
         <input type="button" value="Noter" onclick="Fonction()"><br>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <!-- https://www.geeksforgeeks.org/star-rating-using-html-css-and-javascript/ -->
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
   </form>
-    </div>
+  </div>
 
-    <div class="bottom">
-        <p>Section 4</p>
-    </div>
+</div>
 
-</body>
-</html>
+{% endblock %}

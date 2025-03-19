@@ -1,4 +1,5 @@
 // Fonction qui valide le format du courriel avant de l'envoyer au serveur
+/*
 document.addEventListener("DOMContentLoaded", function () {
     // let emailForm = document.getElementById("emailForm"); // essayer d'obtenir emailForm de la page
     //     if (emailForm) {  // validation seulement si email form sur la page
@@ -17,3 +18,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+ */
