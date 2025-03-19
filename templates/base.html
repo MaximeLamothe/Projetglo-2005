@@ -9,11 +9,12 @@
 <body>
   <div class="header">
   <a href="#default" class="titre">La tour des livres</a>
-      <a class = "header-centre" href="/recherche">Recherche</a>
+
   <div class="header-right">
+      <a href="/recherche">Recherche</a>
     <div class="dropdown">
     <button class="dropbtn">Utilisateur
-      <i class="fa fa-caret-down"></i>
+      <span class="hamburger-icon">&#9776;</span>
     </button>
     <div class="dropdown-content">
       <a href="/profil">Profil</a>
@@ -23,6 +24,8 @@
   </div>
   </div>
 </div>
+
+  <hr /><br>
 
   {% block content %}
     {% with messages = get_flashed_messages() %}
