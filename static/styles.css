@@ -227,3 +227,42 @@ button[type="submit"] {
     padding-left: 40px;
     padding-right: 40px;
 }
+
+
+
+.container-img-text{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-col{
+    max-width: 100%;
+}
+
+.text-col {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.container-img-text > div{
+    flex-basis: 50%;
+}
+
+.container-star{
+    display: flex;
+}
+
+.container-star input {
+    position: absolute;
+    display: none;
+}
+
+.container-star label {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  padding: 48px 0 0;
+  background: url('stars.svg') no-repeat top left;
+}
+
