@@ -108,12 +108,88 @@ def logout():
         session.pop("user", None)
     return redirect(url_for('login'))
 
-@app.route("/auteur/")
-def auteur():
-    #if "user" in session:
-    return render_template('auteur.html', prenom='', nom='', style='', note='')
+## Afficher une page d'auteur
+@app.route("/auteur/<int:auteur_id>")
+def auteur(auteur_id):
+    # if "user" in session:
+    """ Affiche la page de l'auteur et récupère son statut favori """
+    cur = database.cursor
+
+    # Récupérer les infos de l'auteur
+    #cur.execute("SELECT nom FROM auteurs WHERE id = %s", (auteur_id,))
+    result = cur.fetchone()
+
+    if not result:
+        return "Auteur non trouvé", 404
+
+    auteur_nom = result[0]
+
+    # Vérifier si on a déjà l'info via l'URL
+    est_favori = request.args.get("favori")
+
+    if est_favori is None:  # Si l'info n'est pas passée, on fait la requête
+        cur.execute("SELECT COUNT(*) FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
+        est_favori = cur.fetchone()[0] > 0
+    else:
+        est_favori = bool(int(est_favori))  # Convertir en booléen
+
+    cur.close()
+
+    return render_template("auteur.html", auteur_nom=auteur_nom,
+                           auteur_id=auteur_id, est_favori=est_favori)
     # else:
         # return redirect(url_for('login'))
+
+@app.route("/ajouter_auteur/<int:auteur_id>", methods=["POST"])
+def ajouter_auteur(auteur_id):
+    """ Ajoute ou retire l’auteur des favoris et transmet directement le nouvel état """
+    cur = database.cursor
+
+    # Vérifier si l’auteur est déjà en favoris
+    cur.execute("SELECT COUNT(*) FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
+    est_favori = cur.fetchone()[0] > 0
+
+    if est_favori:
+        cur.execute("DELETE FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
+        est_favori = 0  # Nouveau statut
+    else:
+        cur.execute("INSERT INTO auteurs_favoris (auteur_id) VALUES (%s)", (auteur_id,))
+        est_favori = 1  # Nouveau statut
+
+    cur.close()
+
+    # Rediriger avec l'information en paramètre GET pour éviter une nouvelle requête SQL
+    return redirect(url_for("afficher_auteur", auteur_id=auteur_id, favori=est_favori))
+
+@app.route("/noter-auteur/<int:auteur_id>/", methods=["POST"])
+def noter_auteur(auteur_id):
+    """ Ajoute ou modifie la note de l'auteur avec un bouton radio et passe la valeur via l'URL """
+    note = int(request.form.get("note"))
+    note = int(request.form.get("note"))
+    user_id = session["user_id"]
+    cur = database.cursor()
+    existe = cur.fetchone()[0] > 0
+
+    if existe:
+        # Si l'utilisateur a déjà noté, on met à jour sa note
+        cur.execute("UPDATE notes_auteurs SET note = %s WHERE auteur_id = %s AND user_id = %s",
+                    (note, auteur_id, user_id))
+    else:
+        # Si l'utilisateur n'a pas encore noté, on insère une nouvelle ligne
+        cur.execute("INSERT INTO notes_auteurs (auteur_id, note, user_id) VALUES (%s, %s, %s)",
+                    (auteur_id, note, user_id))
+
+    database.connection.commit()
+    cur.close()
+
+    # On récupère aussi est_favori pour éviter la requête SQL dans afficher_auteur
+    est_favori = request.args.get("favori", 0)
+    return redirect(url_for("afficher_auteur", auteur_id=auteur_id, favori=est_favori, note=note))
+
+@app.route("/test")
+def test():
+    list = [1, 2, 3, 4, 5]
+    return render_template("test.html", list=list)
 
 @app.route("/mabiblio/")
 def mabiblio():
