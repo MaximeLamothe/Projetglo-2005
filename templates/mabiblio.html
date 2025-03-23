@@ -1,10 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+    <div class="library-header centre">
+        <h1>Votre Bibliothèque</h1>
+    </div>
+
+    <div class="library-sections">
+        <!-- Section "Lus" -->
+        <div class="library-section">
+            <h2>Livres lus</h2>
+            <p>{{ livres_lus_count }} livre(s) lu(s)</p>
+            <div class="book-grid">
+                {% for livre in livres_lus %}
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">
+                                <a href="{{ url_for('livre_details', lid=livre[0]) }}">
+                                    <strong>{{ livre[1] }}</strong>
+                                </a>
+                            </div>
+                            <div class="book-genre">{{ livre[2] }}</div>
+                            <div class="book-annee">{{ livre[3] }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section "À lire" -->
+        <div class="library-section">
+            <h2>Livres à lire</h2>
+            <p>{{ livres_a_lire_count }} livre(s) à lire</p>
+            <div class="book-grid">
+                {% for livre in livres_a_lire %}
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">
+                                <a href="{{ url_for('livre_details', lid=livre[0]) }}">
+                                    <strong>{{ livre[1] }}</strong>
+                                </a>
+                            </div>
+                            <div class="book-genre">{{ livre[2] }}</div>
+                            <div class="book-annee">{{ livre[3] }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section "À acheter" -->
+        <div class="library-section">
+            <h2>Livres à acheter</h2>
+            <p>{{ livres_a_acheter_count }} livre(s) à acheter</p>
+            <div class="book-grid">
+                {% for livre in livres_a_acheter %}
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">
+                                <a href="{{ url_for('livre_details', lid=livre[0]) }}">
+                                    <strong>{{ livre[1] }}</strong>
+                                </a>
+                            </div>
+                            <div class="book-genre">{{ livre[2] }}</div>
+                            <div class="book-annee">{{ livre[3] }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

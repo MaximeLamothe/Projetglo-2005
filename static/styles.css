@@ -9,8 +9,8 @@ body {
 button[type="submit"] {
     cursor: pointer; /* Ensures the cursor is a pointer on hover */
     padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50; /* Green background */
+    font-size: 20px;
+    background-color: #F6EFD1; /* Green background */
     color: white;
     border: none;
     border-radius: 5px;
@@ -181,4 +181,49 @@ hr {
     background-color: darkgoldenrod; /* Works for some browsers */
     height: 2px; /* Adjust thickness */
     border: none; /* Remove default border */
+}
+
+.info-text {
+    color: #0000FF; /* Bleu saturé */
+}
+
+h1.centre {
+    margin-bottom: 70px; /* Ajuste l'espace entre le titre et les infos */
+    text-align: center; /* Assure que le titre est bien centré */
+}
+
+button[type="submit"] {
+    cursor: pointer; /* Assure que le curseur est une main au survol */
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: #F6EFD1; /* Fond de bouton */
+    color: black; /* Texte noir */
+    border: 2px solid black; /* Contour noir */
+    border-radius: 5px; /* Coins arrondis */
+}
+
+.book-cover img {
+    max-width: 200px; /* Limite la largeur de l'image à 200px */
+    max-height: 300px; /* Limite la hauteur de l'image à 300px */
+    object-fit: cover; /* Redimensionne l'image pour la remplir tout en gardant son ratio */
+    padding-left: 30px;
+}
+
+.textarea {
+        width: 95%; /* Ajuste la largeur à 90% du conteneur */
+        height: 25px; /* Augmente la hauteur */
+        padding: 10px; /* Ajoute de l’espace intérieur */
+        font-size: 16px; /* Règle la taille du texte */
+        border: 2px solid black; /* Ajoute un contour noir */
+        border-radius: 5px; /* Arrondit les bords */
+    }
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 livres par ligne */
+    gap: 20px; /* Espacement entre les livres */
+    justify-content: center; /* Centre les livres */
+    margin-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
 }

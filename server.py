@@ -115,10 +115,80 @@ def auteur():
     # else:
         # return redirect(url_for('login'))
 
-@app.route("/mabiblio/")
-def mabiblio():
 
-    return render_template(mabiblio.html)
+@app.route('/mabiblio/')
+def mabiblio():
+    # Vérifier si l'utilisateur est connecté
+    # if 'user_id' not in session:
+       #  return redirect(url_for('login'))  # Rediriger vers la page de connexion si non connecté
+
+    id = 1  # Récupérer l'ID de l'utilisateur connecté
+
+    try:
+        # Récupérer les livres pour chaque statut
+        livres_lus = database.get_books_by_status(id, 'lu')
+        livres_lus_count = len(livres_lus)
+
+        livres_a_lire = database.get_books_by_status(id, 'a_lire')
+        livres_a_lire_count = len(livres_a_lire)
+
+        livres_a_acheter = database.get_books_by_status(id, 'a_acheter')
+        livres_a_acheter_count = len(livres_a_acheter)
+
+        # Rendre la page avec les livres par statut
+        return render_template('mabiblio.html',
+                               livres_lus=livres_lus, livres_lus_count=livres_lus_count,
+                               livres_a_lire=livres_a_lire, livres_a_lire_count=livres_a_lire_count,
+                               livres_a_acheter=livres_a_acheter, livres_a_acheter_count=livres_a_acheter_count)
+
+    except Exception as e:
+        print(f"Error while fetching user's books: {e}")
+        return render_template('mabiblio.html', error="Erreur lors du chargement des livres.")
+
+
+@app.route("/profil/")
+def profil():
+    # TODO: Recuperer le vrai ID de l'utilisateur connecté
+    id = 1  # Récupérer l'ID de l'utilisateur connecté
+
+    # Récupérer les informations de l'utilisateur
+    user_info = database.get_user_info(id)
+
+    # Si l'utilisateur n'existe pas, retourner une erreur
+    if not user_info:
+        return "Utilisateur non trouvé", 404
+
+    # Rendre la page de profil avec les informations récupérées
+    return render_template('profil.html', **user_info)
+@app.route('/recherche/', methods=['GET', 'POST'])
+def recherche():
+    if request.method == 'POST':
+        auteur = request.form.get('auteur', '')
+        annee = request.form.get('annee', '')
+        titre = request.form.get('titre', '')
+        maison = request.form.get('maison', '')
+        filtre = request.form.get('filtre', '')
+
+        livres_trouves = database.search_books(auteur, annee, titre, maison, filtre)
+    else:
+        livres_trouves = []
+
+    return render_template('recherche.html', livres=livres_trouves)
+@app.route('/livre/<int:lid>')
+def livre_details(lid):
+    # Récupérer les détails du livre
+    book = database.get_book_details(lid)
+
+    # Si le livre n'existe pas, retourner une erreur
+    if not book:
+        return "Livre non trouvé", 404
+
+    # Récupérer les commentaires du livre
+    comments = database.get_comments_for_book(lid)
+
+    # Rendre la page livre.html avec les informations
+    return render_template('livre.html', livre=book, commentaires=comments)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

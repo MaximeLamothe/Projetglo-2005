@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Profil Utilisateur{% endblock %}
+
+{% block content %}
+<h1 class="centre">Profil de {{ prenom }} {{ nom }}</h1>
+
+<div class="container centre">
+    <div class="user-info">
+        <p><strong>Prénom :</strong> <span class="info-text">{{ prenom }}</span></p>
+        <p><strong>Nom :</strong> <span class="info-text">{{ nom }}</span></p>
+        <p><strong>Courriel :</strong> <span class="info-text">{{ email }}</span></p>
+        <p><strong>Surnom :</strong> <span class="info-text">{{ surnom }}</span></p>
+        <p><strong>Âge :</strong> <span class="info-text">{{ age }} ans</span></p>
+        <p><strong>Sexe :</strong> <span class="info-text">{{ sexe }}</span></p>
+    </div>
+</div>
+{% endblock %}

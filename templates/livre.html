@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Détails du Livre{% endblock %}
+
+{% block content %}
+<div class="book-container">
+    <div class="book-details row">
+        <div class="book-cover">
+            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture du livre">
+        </div>
+
+        <!-- Informations du livre -->
+        <div class="book-info" style="padding-left: 40px">
+            <h2>{{ livre.titre }}</h2>
+            <p><strong>Genre:</strong> {{ livre.genre }}</p>
+            <p><strong>Année de publication:</strong> {{ livre.annee }}</p>
+            <p><strong>Maison d'édition:</strong> {{ livre.maison_edition }}</p>
+            <p><strong>Nombre de pages:</strong> {{ livre.nombre_de_pages }}</p>
+            <p><strong>Auteur:</strong> {{ livre.prenom }} {{ livre.nom }}</p>
+            <button class="note-button" style = "font-size: 20px;" >Noter</button>
+            <button class="add-button" style = "font-size: 20px;" >Ajouter</button>
+        </div>
+    </div>
+            <!-- Étoiles de notation -->
+    <div class="rating" style="padding-left: 50px">
+                {% for i in range(5) %}
+                    {% if i < livre.note %}
+                        <span class="star checked" style = "font-size: 30px;" >&#9733; </span>
+                    {% else %}
+                        <span class="star" style = "font-size: 30px;" >&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+        <div style="height: 50px;"></div>
+    </div>
+
+
+</div>
+
+    <!-- Section pour ajouter un commentaire -->
+    <div class="comment-section">
+        <h3>Écrire un commentaire :</h3>
+        <form action="/ajouter_commentaire" method="POST">
+            <textarea class= "textarea" name="contenu" required></textarea>
+            <div class="droite" style="padding-right: 57px;">
+                <button type="submit">Commenter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Section des commentaires -->
+    <div class="comments">
+        <h3>Commentaires :</h3>
+        {% for commentaire in commentaires %}
+            <div class="comment">
+                <p class="comment-content">{{ commentaire.contenu }}</p>
+                <p class="comment-author"><strong>{{ commentaire.lecteur }}</strong></p>
+                <a class = "info-text" href="/repondre/{{ commentaire.id }}">Répondre</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
