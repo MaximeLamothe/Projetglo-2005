@@ -1,4 +1,10 @@
-select * from auteurs;
-SELECT titre, genre, annee, maison_edition, nombre_de_pages, livres.note, auteurs.surnom
-                    FROM livres, auteurs, ecrire
-                    WHERE livres.lid = ecrire.idlivre AND auteurs.aid = ecrire.idauteur AND livres.lid =1;
+show tables;
+show triggers;
+
+select * from noter;
+select * from livres;
+select * from lecteurs;
+select * from auteurpreferer;
+select * from commentaires;
+select * from repondre;
+
