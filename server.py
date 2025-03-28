@@ -26,29 +26,25 @@ def login():
 
         # REGEX pour le courriel
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-
-        # si le courriel est conforme
+        # si le courriel est dans le bon format
         if re.match(email_pattern, courriel):
-
-            # TODO: corriger la requête dans la BD
             cmd = 'SELECT motdepasse FROM lecteurs WHERE email = %s;'
             database.cursor.execute(cmd, (courriel,))
             passeVrai = database.cursor.fetchone()
 
-            # TODO: ajuster la validation selon la bd
             if (passeVrai!=None) and (passe==passeVrai[0]):
-                cmd = 'SELECT * FROM lecteurs WHERE email = %s;'
-                database.cursor.execute(cmd, (courriel,))
-                info = database.cursor.fetchone()
+                info = database.connexion(courriel)
 
-                # user = surnom
-                # session["prenom"] = info[]
-                # session['nom'] = info[]
-                # session["surnom"] = info[]
-                # session['age'] = info[]
-                # session['sexe'] = info[]
-                # session['courriel'] = courriel
-                #
+                # Initialisation de la session
+                session['id'] = info['lid']
+                session['prenom'] = info['prenom']
+                session['nom'] = info['nom']
+                session['surnom'] = info['surnom']
+                session['age'] = info['age']
+                session['sexe'] = info['sexe']
+                session['email'] = info['email']
+                session['nombrelivreslus'] = info['nombrelivreslus']
+
                 return redirect(url_for('mabiblio'))
 
         return render_template('login.html', message="Informations invalides!")
@@ -112,56 +108,59 @@ def logout():
 @app.route("/auteur/<int:auteur_id>")
 def auteur(auteur_id):
     # if "user" in session:
-    """ Affiche la page de l'auteur et récupère son statut favori """
-    cur = database.cursor
 
-    # Récupérer les infos de l'auteur
-    #cur.execute("SELECT nom FROM auteurs WHERE id = %s", (auteur_id,))
-    result = cur.fetchone()
+    auteur = database.get_author_details(auteur_id)
 
-    if not result:
+    if not auteur:
         return "Auteur non trouvé", 404
 
-    auteur_nom = result[0]
-
     # Vérifier si on a déjà l'info via l'URL
-    est_favori = request.args.get("favori")
+    # est_favori = request.args.get("favori")
 
-    if est_favori is None:  # Si l'info n'est pas passée, on fait la requête
-        cur.execute("SELECT COUNT(*) FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
-        est_favori = cur.fetchone()[0] > 0
-    else:
-        est_favori = bool(int(est_favori))  # Convertir en booléen
+    # if est_favori is None:  # Si l'info n'est pas passée, on fait la requête
+    #     cur.execute("SELECT COUNT(*) FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
+    #     est_favori = cur.fetchone()[0] > 0
+    # else:
+    #     est_favori = bool(int(est_favori))  # Convertir en booléen
 
-    cur.close()
-
-    return render_template("auteur.html", auteur_nom=auteur_nom,
-                           auteur_id=auteur_id, est_favori=est_favori)
+    return render_template("auteur.html", auteur=auteur)
     # else:
         # return redirect(url_for('login'))
 
 
 
-@app.route("/ajouter_auteur/<int:auteur_id>", methods=["POST"])
-def ajouter_auteur(auteur_id):
-    """ Ajoute ou retire l’auteur des favoris et transmet directement le nouvel état """
-    cur = database.cursor
+@app.route("/auteur_favori/<int:auteur_id>", methods=["POST"])
+def auteur_favori (auteur_id):
+    action = request.form.get("favori")
+
+    if action == "ajouter":
+        # Ajouter l'auteur aux favoris du lecteur
+        auteur = database.get_author_details(auteur_id)
+
+        if not auteur:
+            return "Auteur non trouvé", 404
+
+    else:
+        auteur = database.get_author_details(auteur_id)
+
+        if not auteur:
+            return "Auteur non trouvé", 404
 
     # Vérifier si l’auteur est déjà en favoris
-    cur.execute("SELECT COUNT(*) FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
+    cur.execute("SELECT COUNT(*) FROM auteurpreferer WHERE auteur_id = %s", (auteur_id,))
     est_favori = cur.fetchone()[0] > 0
 
     if est_favori:
-        cur.execute("DELETE FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
+        cur.execute("DELETE FROM auteurpreferer WHERE auteur_id = %s", (auteur_id,))
         est_favori = 0  # Nouveau statut
     else:
-        cur.execute("INSERT INTO auteurs_favoris (auteur_id) VALUES (%s)", (auteur_id,))
+        cur.execute("INSERT INTO auteurpreferer (auteur_id) VALUES (%s)", (auteur_id,))
         est_favori = 1  # Nouveau statut
 
     cur.close()
 
     # Rediriger avec l'information en paramètre GET pour éviter une nouvelle requête SQL
-    return redirect(url_for("afficher_auteur", auteur_id=auteur_id, favori=est_favori))
+    return redirect(url_for("afficher_auteur", auteur_id=auteur_id))
 
 @app.route("/noter-auteur/<int:auteur_id>/", methods=["POST"])
 def noter_auteur(auteur_id):

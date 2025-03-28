@@ -141,17 +141,90 @@ class Database:
             print(f"Error while fetching user info: {e}")
             return None
 
-def get_books_by_status(self, user_id, statut):
-    try:
-        request = f"""
-            SELECT l.lid, l.titre, l.genre, l.annee 
-            FROM livres l, lire
-            WHERE lire.idlecteur = %s AND lire.statut = %s AND l.lid = lire.idlivre
-        """
-        # Exécuter la requête
-        self.cursor.execute(request, (user_id, statut))
-        result = self.cursor.fetchall()
-        return result
-    except Exception as e:
-        print(f"Error while fetching books by status: {e}")
-        return None
+    def get_books_by_status(self, user_id, statut):
+        try:
+            request = f"""
+                SELECT l.lid, l.titre, l.genre, l.annee 
+                FROM livres l, lire
+                WHERE lire.idlecteur = %s AND lire.statut = %s AND l.lid = lire.idlivre
+            """
+            # Exécuter la requête
+            self.cursor.execute(request, (user_id, statut))
+            result = self.cursor.fetchall()
+            return result
+        except Exception as e:
+            print(f"Error while fetching books by status: {e}")
+            return None
+
+    # Fonction pour récupérer les informations d'un auteur
+    def get_author_details(self, aid, lid):
+        try:
+            request = """SELECT A.prenom, A.nom, A.surnom, A.specialite, A.photo, A.note, A.aid,
+                (SELECT COUNT(*) FROM auteurpreferer AP WHERE AP.idauteur = A.aid AND AP.idlecteur = %s) AS favori
+                FROM auteurs A
+                WHERE A.aid = %s;
+            """
+
+            self.cursor.execute(request, (lid, aid))
+            auteur = self.cursor.fetchone()  # Récupère la première ligne
+
+            if auteur:
+            # Si la note est NULL, affecter 0 par défaut
+                return {
+                    'prenom': auteur[0],
+                    'nom': auteur[1],
+                    'surnom': auteur[2],
+                    'specialite': auteur[3],
+                    'photo': auteur[4],
+                    'note': auteur[5] if auteur[5] is not None else 0,  # Correction ici
+                    'id': auteur[6],
+                    'favori':auteur[7]
+                    }
+            else:
+                print(f"Erreur: Aucun auteur trouvé avec l'ID {aid}")
+                return None
+        except Exception as e:
+            print(f"Erreur en recherchant les informations de l'auteur: {e}")
+            return None
+
+    def add_favorite_author(self, aid, lid):
+        try:
+            request = """INSERT INTO auteurpreferer VALUES (%s, %s);"""
+            self.cursor.execute(request, (lid, aid))
+            self.connection.commit()
+            return True
+
+        except Exception as e:
+            print(f"Erreur en ajoutant l'auteur {aid} aux favoris: {e}")
+            return False
+
+    def connexion(self, email):
+        try:
+            request = """
+                            SELECT *
+                            FROM lecteurs
+                            WHERE lecteurs.email = %s
+                        """
+            self.cursor.execute(request, (email,))
+            user_info = self.cursor.fetchone()
+
+            user_data = {
+                'lid': user_info[0],
+                'prenom': user_info[1],
+                'nom': user_info[2],
+                'surnom': user_info[3],
+                'age': user_info[4],
+                'email': user_info[5],
+                'motdepasse': user_info[6],
+                'nombrelivreslus': user_info[7],
+                'sexe': user_info[8],
+            }
+            return user_data
+
+        except Exception as e:
+            print(f"Erreur lors de la connexion avec le courriel {email}: {e}")
+            return False
+
+
+
+

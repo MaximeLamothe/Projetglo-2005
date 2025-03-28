@@ -2,51 +2,43 @@
 
 {% block title %}Auteur{% endblock %} <!-- {auteur_nom} -->
 {% block content %}
-<h2>{{ auteur_nom }}</h2>
+<div class="book-container">
+    <div class="book-details row">
+        <div class="book-cover">
+            <img src="{{ url_for('static', filename='{{auteur.photo}}) }}" alt="Couverture du livre">
+        </div>
 
-<div class="row">
-  <div class="column">
-      <p>Photo ici</p>
-  </div>
+        <!-- Informations sur l'auteur -->
+        <div class="author-info" style="padding-left: 40px">
+            <h2>{{ auteur.prenom }} {{ auteur.nom }}</h2>
+            <p><strong>Prénom:</strong> {{ auteur.prenom }}</p>
+            <p><strong>Nom:</strong> {{ auteur.nom }}</p>
+            <p><strong>Style:</strong> {{ auteur.specialite }}</p>
 
-  <div class="column">
-      Nom: {{prenom}} {{nom}}<br>
-      Style: {{style}}<br>
-      Note: {{note}}<br>
+            <form action="{{ url_for('auteur_favori', auteur_id=auteur.id) }}" method="post">
+                <input type="hidden" name="favori" value="{{ 'retirer' if favori else 'ajouter' }}">
+                <button type="submit" class="{% if favori %}retirer{% else %}ajouter{% endif %}">
+                {% if auteur.favori %}
+                    Retirer des favoris
+                {% else %}
+                    Ajouter aux favoris
+                {% endif %}
+                </button>
+            </form>
 
-      <form action="{{ url_for('ajouter_auteur', auteur_id=auteur_id) }}" method="post">
-        <button type="submit" class="{% if est_favori %}retirer{% else %}ajouter{% endif %}">
-            {% if est_favori %}
-                Retirer des favoris
-            {% else %}
-                Ajouter aux favoris
-            {% endif %}
-        </button>
-    </form>
-
-      <form action="{{ url_for('noter_auteur', auteur_id=auteur_id, favori=est_favori) }}" method="post">
-          <input type="radio" name="note" value="1" required> 1
-        <input type="radio" name="note" value="2"> 2
-        <input type="radio" name="note" value="3"> 3
-        <input type="radio" name="note" value="4"> 4
-          <input type="radio" name="note" value="5"> 5 <br>
-
-          <p>
-        <input type="submit" value="Noter" name="noter">
-        </p>
-      </form>
-
-        <input type="button" value="Noter" onclick="Fonction()"><br>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-            <!-- https://www.geeksforgeeks.org/star-rating-using-html-css-and-javascript/ -->
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star"></span>
-        <span class="fa fa-star"></span>
-  </form>
-  </div>
+        </div>
+    </div>
+            <!-- Étoiles de notation -->
+    <div class="rating" style="padding-left: 50px">
+                {% for i in range(5) %}
+                    {% if i < auteur.note %}
+                        <span class="star checked" style = "font-size: 30px;" >&#9733; </span>
+                    {% else %}
+                        <span class="star" style = "font-size: 30px;" >&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+        <div style="height: 50px;"></div>
+    </div>
 
 </div>
-
 {% endblock %}
