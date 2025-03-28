@@ -16,32 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `commenter`
+-- Table structure for table `auteurpreferer`
 --
 
-DROP TABLE IF EXISTS `commenter`;
+DROP TABLE IF EXISTS `auteurpreferer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `commenter` (
+CREATE TABLE `auteurpreferer` (
   `idlecteur` int NOT NULL,
-  `idlivre` int NOT NULL,
-  `idcommentaire` int NOT NULL,
-  PRIMARY KEY (`idlecteur`,`idlivre`,`idcommentaire`),
-  KEY `idlivre` (`idlivre`),
-  KEY `idcommentaire` (`idcommentaire`),
-  CONSTRAINT `commenter_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `commenter_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE,
-  CONSTRAINT `commenter_ibfk_3` FOREIGN KEY (`idcommentaire`) REFERENCES `commentaires` (`cid`) ON DELETE CASCADE
+  `idauteur` int NOT NULL,
+  PRIMARY KEY (`idlecteur`,`idauteur`),
+  KEY `idauteur` (`idauteur`),
+  CONSTRAINT `auteurpreferer_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `auteurpreferer_ibfk_2` FOREIGN KEY (`idauteur`) REFERENCES `auteurs` (`aid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `commenter`
+-- Dumping data for table `auteurpreferer`
 --
 
-LOCK TABLES `commenter` WRITE;
-/*!40000 ALTER TABLE `commenter` DISABLE KEYS */;
-/*!40000 ALTER TABLE `commenter` ENABLE KEYS */;
+LOCK TABLES `auteurpreferer` WRITE;
+/*!40000 ALTER TABLE `auteurpreferer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auteurpreferer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-25 15:53:03
+-- Dump completed on 2025-03-28 18:50:43

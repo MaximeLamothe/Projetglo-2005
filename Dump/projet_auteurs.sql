@@ -16,29 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `repondre`
+-- Table structure for table `auteurs`
 --
 
-DROP TABLE IF EXISTS `repondre`;
+DROP TABLE IF EXISTS `auteurs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `repondre` (
-  `idcommentaireparent` int NOT NULL,
-  `idcommentairereponse` int NOT NULL,
-  PRIMARY KEY (`idcommentaireparent`,`idcommentairereponse`),
-  KEY `idcommentairereponse` (`idcommentairereponse`),
-  CONSTRAINT `repondre_ibfk_1` FOREIGN KEY (`idcommentaireparent`) REFERENCES `commentaires` (`cid`) ON DELETE CASCADE,
-  CONSTRAINT `repondre_ibfk_2` FOREIGN KEY (`idcommentairereponse`) REFERENCES `commentaires` (`cid`) ON DELETE CASCADE
+CREATE TABLE `auteurs` (
+  `aid` int NOT NULL,
+  `prenom` varchar(50) NOT NULL,
+  `nom` varchar(50) NOT NULL,
+  `surnom` varchar(50) NOT NULL,
+  `specialite` varchar(50) NOT NULL,
+  `photo` varchar(50) DEFAULT NULL,
+  `note` decimal(3,2) DEFAULT NULL,
+  PRIMARY KEY (`aid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `repondre`
+-- Dumping data for table `auteurs`
 --
 
-LOCK TABLES `repondre` WRITE;
-/*!40000 ALTER TABLE `repondre` DISABLE KEYS */;
-/*!40000 ALTER TABLE `repondre` ENABLE KEYS */;
+LOCK TABLES `auteurs` WRITE;
+/*!40000 ALTER TABLE `auteurs` DISABLE KEYS */;
+INSERT INTO `auteurs` VALUES (1,'Victor','Hugo','VHugo','Roman','a1.jpg',4.00),(2,'Jules','Verne','JVerne','Science-fiction','a2.jpg',1.00),(3,'George','Orwell','GOrwell','Dystopie','a3.jpg',0.00),(4,'Jane','Austen','JAusten','Romance','a4.jpg',0.00);
+/*!40000 ALTER TABLE `auteurs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-21  2:13:07
+-- Dump completed on 2025-03-28 18:50:43

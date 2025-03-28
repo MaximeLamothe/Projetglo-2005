@@ -16,33 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `livres`
+-- Table structure for table `commenter`
 --
 
-DROP TABLE IF EXISTS `livres`;
+DROP TABLE IF EXISTS `commenter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `livres` (
-  `lid` int NOT NULL,
-  `titre` varchar(50) NOT NULL,
-  `genre` varchar(50) NOT NULL,
-  `annee` int DEFAULT NULL,
-  `maison_edition` varchar(50) DEFAULT NULL,
-  `couverture` varchar(50) DEFAULT NULL,
-  `nombre_de_pages` int DEFAULT NULL,
-  `note` decimal(3,2) DEFAULT NULL,
-  PRIMARY KEY (`lid`)
+CREATE TABLE `commenter` (
+  `idlecteur` int NOT NULL,
+  `idlivre` int NOT NULL,
+  `idcommentaire` int NOT NULL,
+  PRIMARY KEY (`idlecteur`,`idlivre`,`idcommentaire`),
+  KEY `idlivre` (`idlivre`),
+  KEY `idcommentaire` (`idcommentaire`),
+  CONSTRAINT `commenter_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `commenter_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE,
+  CONSTRAINT `commenter_ibfk_3` FOREIGN KEY (`idcommentaire`) REFERENCES `commentaires` (`cid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `livres`
+-- Dumping data for table `commenter`
 --
 
-LOCK TABLES `livres` WRITE;
-/*!40000 ALTER TABLE `livres` DISABLE KEYS */;
-INSERT INTO `livres` VALUES (1,'Les Misérables','Roman',1862,'Gallimard','les_miserables.jpg',1232,NULL),(2,'Le Tour du monde en 80 jours','Aventure',1873,'Hachette','tour_du_monde.jpg',320,NULL),(3,'1984','Dystopie',1949,'Secker & Warburg','1984.jpg',328,NULL),(4,'Pride and Prejudice','Romance',1813,'T. Egerton','pride_prejudice.jpg',432,NULL),(5,'Notre-Dame de Paris','Roman',1831,'Librairie Gosselin','notre_dame.jpg',940,NULL),(6,'Vingt Mille Lieues sous les mers','Science-fiction',1870,'Pierre-Jules Hetzel','20m_lieues.jpg',672,NULL);
-/*!40000 ALTER TABLE `livres` ENABLE KEYS */;
+LOCK TABLES `commenter` WRITE;
+/*!40000 ALTER TABLE `commenter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `commenter` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-21  2:13:07
+-- Dump completed on 2025-03-28 18:50:43
