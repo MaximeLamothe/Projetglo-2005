@@ -10,6 +10,14 @@
 <body>
     <h1>La tour des livres</h1>
 
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }}</p>
+        {% endfor %}
+    {%endif%}
+  {%endwith%}
+
     <form id="emailForm" action="login" method="post">
     <p> <label for="courriel">Courriel</label><br>
         <input type="email" id="courriel" name="courriel" placeholder="Entrez votre courriel" value="{{email if email}}" required><br>

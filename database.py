@@ -198,6 +198,17 @@ class Database:
             print(f"Erreur en ajoutant l'auteur {aid} aux favoris: {e}")
             return False
 
+    def remove_favorite_author(self, aid, lid):
+        try:
+            request = """DELETE FROM auteurpreferer WHERE lid=%s AND aid=%s;"""
+            self.cursor.execute(request, (lid, aid))
+            self.connection.commit()
+            return True
+
+        except Exception as e:
+            print(f"Erreur en retirant l'auteur {aid} des favoris: {e}")
+            return False
+
     def connexion(self, email):
         try:
             request = """
@@ -225,6 +236,29 @@ class Database:
             print(f"Erreur lors de la connexion avec le courriel {email}: {e}")
             return False
 
+    def add_user(self, prenom, nom, surnom, age, courriel, sexe, motpasse):
+        try:
+            # Déterminer le dernier id
+            request_id = """
+                SELECT MAX(id) AS max_id
+                FROM lecteurs       
+                """
+            self.cursor.execute(request_id)
+            max_id = self.cursor.fetchone()
+            print(max_id)
+            new_id = max_id[0] + 1
 
+            request = """INSERT INTO lecteurs (id, prenom, nom, surnom, age, email, motdepasse, nombrelivreslus, sexe) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s,  %s, %s);"""
+
+
+
+            self.cursor.execute(request, (new_id, prenom, nom, surnom, age, courriel, motpasse, 0, sexe))
+            self.connection.commit()
+            return True
+
+        except Exception as e:
+            print(f"Erreur en ajoutant l'utilisateur {surnom} : {e}")
+            return False
 
 

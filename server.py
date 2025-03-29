@@ -61,17 +61,16 @@ def creationcompte():
     return render_template('creationcompte.html')
 
 # Fonction pour gérer la soumission du formulaire de nouveau compte
-@app.route('/inscription/', methods=['POST'])
+@app.route('/creation-compte/inscription/', methods=['POST'])
 def inscription():
-
     # Récupérer les informations entrées par l'utilisateur
     prenom = request.form.get("prenom")
     nom = request.form.get("nom")
     courriel = request.form.get("courriel")
-    surnom = request.form.get("surname")
+    surnom = request.form.get("surnom")
     age = request.form.get("age")
     sexe = request.form.get("sexe")
-    motpasse = request.form.get("motpass")
+    motpasse = request.form.get("motpasse")
 
     # REGEX pour le courriel
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -85,19 +84,23 @@ def inscription():
 
         if info: # si le courriel est déjà dans la BD
             flash("Ce courriel est déjà utilisé !", "info")
-            return redirect(url_for('creationcompte'))
-        else:
-            # TODO: ajouter l'utilisateur à la base de données
+            return redirect(url_for('creation-compte'))
 
-            flash("Votre compte a été créé!", "info")
-            return redirect(url_for('login'))  # Rediriger l'utilisateur vers la page login
+        else:
+            valide = database.add_user(prenom, nom, surnom, age, courriel, sexe, motpasse)
+            if valide:
+                flash("Votre compte a été créé!", "info")
+                return redirect(url_for('login'))  # Rediriger l'utilisateur vers la page login
+            else:
+                flash("ERREUR !", "info")
+                return redirect(url_for('creation-compte'))
 
     # si le courriel n'est pas dans le bon format
     else:
         flash("Le courriel est invalide !", "info")
         return redirect(url_for('creation-compte'))
 
-@app.route("/logout")
+@app.route("/logout", methods=['POST'])
 def logout():
     if 'user' in session:
         flash("Vous avez été déconnecté!", "info")
@@ -105,14 +108,14 @@ def logout():
     return redirect(url_for('login'))
 
 ## Afficher une page d'auteur
-@app.route("/auteur/<int:auteur_id>")
+@app.route("/auteur/<int:auteur_id>", methods=['GET', 'POST'])
 def auteur(auteur_id):
-    # if "user" in session:
+    if "prenom" in session:
+        lid = session['id']
+        auteur = database.get_author_details(auteur_id, lid)
 
-    auteur = database.get_author_details(auteur_id)
-
-    if not auteur:
-        return "Auteur non trouvé", 404
+        if not auteur:
+            return "Auteur non trouvé", 404
 
     # Vérifier si on a déjà l'info via l'URL
     # est_favori = request.args.get("favori")
@@ -132,34 +135,20 @@ def auteur(auteur_id):
 @app.route("/auteur_favori/<int:auteur_id>", methods=["POST"])
 def auteur_favori (auteur_id):
     action = request.form.get("favori")
+    lid = session['id']
 
     if action == "ajouter":
         # Ajouter l'auteur aux favoris du lecteur
-        auteur = database.get_author_details(auteur_id)
-
+        auteur = database.add_favorite_author(auteur_id, lid)
         if not auteur:
             return "Auteur non trouvé", 404
 
     else:
-        auteur = database.get_author_details(auteur_id)
-
+        # Retirer l'auteur des favoris du lecteur
+        auteur = database.remove_favorite_author(auteur_id, lid)
         if not auteur:
             return "Auteur non trouvé", 404
 
-    # Vérifier si l’auteur est déjà en favoris
-    cur.execute("SELECT COUNT(*) FROM auteurpreferer WHERE auteur_id = %s", (auteur_id,))
-    est_favori = cur.fetchone()[0] > 0
-
-    if est_favori:
-        cur.execute("DELETE FROM auteurpreferer WHERE auteur_id = %s", (auteur_id,))
-        est_favori = 0  # Nouveau statut
-    else:
-        cur.execute("INSERT INTO auteurpreferer (auteur_id) VALUES (%s)", (auteur_id,))
-        est_favori = 1  # Nouveau statut
-
-    cur.close()
-
-    # Rediriger avec l'information en paramètre GET pour éviter une nouvelle requête SQL
     return redirect(url_for("afficher_auteur", auteur_id=auteur_id))
 
 @app.route("/noter-auteur/<int:auteur_id>/", methods=["POST"])
