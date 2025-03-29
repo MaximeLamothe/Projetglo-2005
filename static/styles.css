@@ -5,54 +5,24 @@ body {
     font-size: 16px; /* Standard size for forms */
 }
 
-
-button[type="submit"] {
-    cursor: pointer; /* Ensures the cursor is a pointer on hover */
-    padding: 10px 20px;
-    font-size: 20px;
-    background-color: #F6EFD1; /* Green background */
+button {
+    cursor: pointer; /* Pointeur */
+    background-color: #8B5E3C; /* Brun */
     color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
+    font-size: 16px;
 }
 
-.row {
-  display: flex;
+button:hover {
+    background-color: #6E462E; /* Brun plus foncé au survol */
 }
-
-.column {
-  flex: 50%;
-}
-
-input {
-  /* display: block;  Ensures they appear on new lines */
-  padding: 10px; /* Adds internal spacing */
-  margin-bottom: 10px; /* Spacing between form fields */
-  border: 1px solid #ccc; /* Light border for visibility */
-  border-radius: 5px; /* Soft rounded edges */
-}
-
 
 p {
     color: black;
     margin-left: 50px;
     margin-right: 50px;
-
-}
-
-.centre { text-align: center; }
-
-.gauche {
-    text-align: left;
-}
-
-.droite {
-    text-align: right;
-}
-
-/* étoiles */
-.checked {
-  color: orange;
 }
 
 .header {
@@ -60,108 +30,109 @@ p {
   padding: 20px;
 }
 
-/* Navbar */
+.centre { text-align: center;
+}
 
-/* Links inside the navbar */
-.navbar a {
-  float: left;
-  font-size: 16px;
+/** Page login */
+input {
+  padding: 10px; /* Adds internal spacing */
+  margin-bottom: 10px; /* Spacing between form fields */
+  border: 1px solid #ccc; /* Light border for visibility */
+  border-radius: 5px; /* Soft rounded edges */
+}
+
+/* Dashboard */
+
+/* --- Header --- */
+.header {
+    color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+/* --- Titre du site --- */
+.header-title {
+  font-size: 20px;
+
+}
+
+/* --- Navigation à droite (Recherche & Utilisateur) --- */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espacement entre les éléments */
+}
+
+/* --- Liens de navigation (Recherche, Profil, etc.) --- */
+.header a {
   color: black;
-  text-align: center;
-  padding: 14px 16px;
   text-decoration: none;
+  font-size: 18px;
+  padding: 12px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
-/* The dropdown container */
+.header a:hover {
+    color: white;
+  background-color: #8B5E3C;
+}
+
+/* --- Dropdown --- */
 .dropdown {
-  float: right;
-  overflow: hidden;
+  position: relative;
+    transition: background 0.3s ease;
 }
 
-/* Dropdown button */
-.dropdown .dropbtn {
+
+/* --- Bouton Dropdown Utilisateur--- */
+.dropbtn {
   font-size: 18px;
   border: none;
-  outline: none;
-  color: black;
-  padding: 14px 16px;
-
-  background-color: inherit;
-  font-family: inherit; /* Important for vertical align on mobile phones */
-  margin: 0; /* Important for vertical align on mobile phones */
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espace entre le texte et l'icône */
+  padding: 12px;
+    color: black;
+    transition: background 0.3s ease;
 }
 
-/* Dropdown content (hidden by default) */
+.dropbtn:hover{
+    color: white;
+}
+
+
+/* --- Contenu du Dropdown (caché par défaut) --- */
 .dropdown-content {
   display: none;
   position: absolute;
+  right: 0;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-/* Links inside the dropdown */
+/* --- Liens à l'intérieur du Dropdown --- */
 .dropdown-content a {
-  float: none;
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
   display: block;
+  padding: 12px 16px;
+  color: black;
   text-align: left;
 }
 
-/* Add a grey background color to dropdown links on hover */
 .dropdown-content a:hover {
-  background-color: #ddd;
+  background-color: #8B5E3C;
 }
 
-/* Show the dropdown menu on hover */
+/* --- Affichage du Dropdown au survol --- */
 .dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.checkbtn {
- font-size: 1.5rem;
- color: white;
- cursor: pointer;
-}
-
-/* header */
-
-/* Style the header with some padding */
-.header {
-  overflow: hidden;
-  padding: 20px 20px;
-}
-
-/* Style the header links */
-.header a {
-  float: left;
-  color: black;
-  text-align: center;
-  padding: 12px;
-  text-decoration: none;
-  font-size: 18px;
-  line-height: 25px;
-  border-radius: 4px;
-}
-
-/* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
-.header a.logo {
-  font-size: 35px;
-  font-weight: bold;
-}
-
-/* Change the background color on mouse-over */
-.header a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-/* Float the link section to the right */
-.header-right {
-  float: right;
+    display: block;
 }
 
 /* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
@@ -177,8 +148,8 @@ p {
 }
 
 hr {
-    color: darkgoldenrod; /* Changes the color */
-    background-color: darkgoldenrod; /* Works for some browsers */
+    color: #8B5E3C; /* Changes the color */
+    background-color: #8B5E3C; /* Works for some browsers */
     height: 2px; /* Adjust thickness */
     border: none; /* Remove default border */
 }
@@ -190,16 +161,6 @@ hr {
 h1.centre {
     margin-bottom: 70px; /* Ajuste l'espace entre le titre et les infos */
     text-align: center; /* Assure que le titre est bien centré */
-}
-
-button[type="submit"] {
-    cursor: pointer; /* Assure que le curseur est une main au survol */
-    padding: 10px 20px;
-    font-size: 20px;
-    background-color: #F6EFD1; /* Fond de bouton */
-    color: black; /* Texte noir */
-    border: 2px solid black; /* Contour noir */
-    border-radius: 5px; /* Coins arrondis */
 }
 
 .book-cover img {
@@ -228,8 +189,6 @@ button[type="submit"] {
     padding-right: 40px;
 }
 
-
-
 .container-img-text{
     display: flex;
     align-items: center;
@@ -249,20 +208,4 @@ button[type="submit"] {
     flex-basis: 50%;
 }
 
-.container-star{
-    display: flex;
-}
-
-.container-star input {
-    position: absolute;
-    display: none;
-}
-
-.container-star label {
-  width: 48px;
-  height: 48px;
-  overflow: hidden;
-  padding: 48px 0 0;
-  background: url('stars.svg') no-repeat top left;
-}
 
