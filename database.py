@@ -34,7 +34,7 @@ class Database:
     def get_book_details(self, lid):
         try:
             request = f"""
-                    SELECT titre, genre, annee, maison_edition, nombre_de_pages, livres.note, auteurs.prenom, auteurs.nom
+                    SELECT titre, genre, annee, maison_edition, nombre_de_pages, livres.note, auteurs.prenom, auteurs.nom, auteurs.aid
                     FROM livres, auteurs, ecrire
                     WHERE livres.lid = ecrire.idlivre AND auteurs.aid = ecrire.idauteur AND livres.lid =%s"""
             self.cursor.execute(request, (lid,))
@@ -51,7 +51,7 @@ class Database:
                     'note': book[5] if book[5] is not None else 0,  # Correction ici
                     'prenom': book[6],
                     'nom' : book[7],
-
+                    'aid': book[8],
                 }
             else:
                 print(f"Erreur: Aucun livre trouvé avec l'ID {lid}")

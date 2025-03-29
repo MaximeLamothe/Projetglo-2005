@@ -251,7 +251,5 @@ def livre_details(lid):
     # Rendre la page livre.html avec les informations
     return render_template('livre.html', livre=book, commentaires=comments)
 
-
-
 if __name__ == "__main__":
     app.run(debug=True)

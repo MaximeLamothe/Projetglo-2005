@@ -16,7 +16,9 @@
             <p><strong>Année de publication:</strong> {{ livre.annee }}</p>
             <p><strong>Maison d'édition:</strong> {{ livre.maison_edition }}</p>
             <p><strong>Nombre de pages:</strong> {{ livre.nombre_de_pages }}</p>
-            <p><strong>Auteur:</strong> {{ livre.prenom }} {{ livre.nom }}</p>
+            <p><strong>Auteur:</strong>
+                <a href="{{ url_for('auteur', auteur_id=livre.aid) }}">{{ livre.prenom }} {{ livre.nom }}</a>
+            </p>
             <button class="note-button" style = "font-size: 20px;" >Noter</button>
             <button class="add-button" style = "font-size: 20px;" >Ajouter</button>
         </div>
