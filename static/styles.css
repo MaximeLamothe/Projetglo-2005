@@ -19,6 +19,13 @@ button:hover {
     background-color: #6E462E; /* Brun plus foncé au survol */
 }
 
+.droite {
+     text-align: right;
+ }
+
+.centre { text-align: center;
+}
+
 p {
     color: black;
     margin-left: 50px;
@@ -28,9 +35,6 @@ p {
 .header {
   text-align: center;
   padding: 20px;
-}
-
-.centre { text-align: center;
 }
 
 /** Page login */
@@ -147,21 +151,27 @@ input {
   }
 }
 
-hr {
+
+    hr {
     color: #8B5E3C; /* Changes the color */
     background-color: #8B5E3C; /* Works for some browsers */
     height: 2px; /* Adjust thickness */
     border: none; /* Remove default border */
 }
 
+
 .info-text {
     color: #0000FF; /* Bleu saturé */
 }
+
+
 
 h1.centre {
     margin-bottom: 70px; /* Ajuste l'espace entre le titre et les infos */
     text-align: center; /* Assure que le titre est bien centré */
 }
+
+
 
 .book-cover img {
     max-width: 200px; /* Limite la largeur de l'image à 200px */
@@ -187,6 +197,10 @@ h1.centre {
     margin-top: 20px;
     padding-left: 40px;
     padding-right: 40px;
+}
+
+.row {
+    display: flex;
 }
 
 .container-img-text{
