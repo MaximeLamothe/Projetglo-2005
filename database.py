@@ -236,6 +236,28 @@ class Database:
             print(f"Erreur lors de la connexion avec le courriel {email}: {e}")
             return False
 
+    def get_password(self, email):
+        try:
+            request = 'SELECT motdepasse FROM lecteurs WHERE email = %s;'
+            self.cursor.execute(request, (email,))
+            result = self.cursor.fetchone()
+            return result
+
+        except Exception as e:
+            print(f"Erreur en recherchant le courriel {email} : {e}")
+            return False
+
+    def get_email(self, email):
+        try:
+            request = f"""SELECT email FROM lecteurs WHERE email = %s;"""
+            self.cursor.execute(request, (email,))
+            result = self.cursor.fetchone()
+            return result
+
+        except Exception as e:
+            print(f"Erreur en recherchant le courriel {email} : {e}")
+            return False
+
     def add_user(self, prenom, nom, surnom, age, courriel, sexe, motpasse):
         try:
             # Déterminer le dernier id

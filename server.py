@@ -26,11 +26,11 @@ def login():
 
         # REGEX pour le courriel
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
         # si le courriel est dans le bon format
         if re.match(email_pattern, courriel):
-            cmd = 'SELECT motdepasse FROM lecteurs WHERE email = %s;'
-            database.cursor.execute(cmd, (courriel,))
-            passeVrai = database.cursor.fetchone()
+            # Aller chercher le mot de passe associé au courriel
+            passeVrai = database.get_password(courriel)
 
             if (passeVrai!=None) and (passe==passeVrai[0]):
                 info = database.connexion(courriel)
@@ -78,13 +78,11 @@ def inscription():
     # si le courriel est conforme
     if re.match(email_pattern, courriel):
         # vérifier que le courriel n'est pas déjà dans la BD
-        cmd = 'SELECT email FROM lecteurs WHERE email = %s;'
-        database.cursor.execute(cmd, (courriel,))
-        info = database.cursor.fetchone()
+        info = database.get_email(courriel)
 
         if info: # si le courriel est déjà dans la BD
             flash("Ce courriel est déjà utilisé !", "info")
-            return redirect(url_for('creation-compte'))
+            return redirect(url_for('creationcompte'))
 
         else:
             valide = database.add_user(prenom, nom, surnom, age, courriel, sexe, motpasse)
@@ -93,12 +91,12 @@ def inscription():
                 return redirect(url_for('login'))  # Rediriger l'utilisateur vers la page login
             else:
                 flash("ERREUR !", "info")
-                return redirect(url_for('creation-compte'))
+                return redirect(url_for('creationcompte'))
 
     # si le courriel n'est pas dans le bon format
     else:
         flash("Le courriel est invalide !", "info")
-        return redirect(url_for('creation-compte'))
+        return redirect(url_for('creationcompte'))
 
 @app.route("/logout/", methods=['GET', 'POST'])
 def logout():
