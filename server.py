@@ -111,13 +111,14 @@ def logout():
 @app.route("/auteur/<int:auteur_id>", methods=['GET', 'POST'])
 def auteur(auteur_id):
     if "prenom" in session:
-        print(url_for("auteur_favori", auteur_id=1))
 
         lid = session['id']
         auteur = database.get_author_details(auteur_id, lid)
 
         if not auteur:
             return "Auteur non trouvé", 404
+
+        livres = database.get_books_by_author(auteur_id)
 
     # Vérifier si on a déjà l'info via l'URL
     # est_favori = request.args.get("favori")
@@ -128,7 +129,7 @@ def auteur(auteur_id):
     # else:
     #     est_favori = bool(int(est_favori))  # Convertir en booléen
 
-        return render_template("auteur.html", auteur=auteur)
+        return render_template("auteur.html", auteur=auteur, livres=livres)
     # si aucun utilisateur connecté
     else:
         return redirect(url_for('login'))
@@ -249,6 +250,7 @@ def livre_details(lid):
 
     # Rendre la page livre.html avec les informations
     return render_template('livre.html', livre=book, commentaires=comments)
+
 
 
 if __name__ == "__main__":

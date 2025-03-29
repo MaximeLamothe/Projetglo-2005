@@ -261,4 +261,18 @@ class Database:
             print(f"Erreur en ajoutant l'utilisateur {surnom} : {e}")
             return False
 
+    def get_books_by_author(self, aid):
+        try:
+            request = f"""
+                SELECT L.lid, L.titre, L.genre, L.annee, L.couverture
+                FROM livres L, ecrire E
+                WHERE L.lid = E.idlivre AND E.idauteur = %s 
+            """
+            # Exécuter la requête
+            self.cursor.execute(request, aid)
+            livres = self.cursor.fetchall()
+            return livres
 
+        except Exception as e:
+            print(f"Error while fetching books by author: {e}")
+            return None
