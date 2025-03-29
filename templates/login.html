@@ -24,11 +24,14 @@
         <label for="motpasse">Mot de passe</label><br>
         <input type="password" id="motpasse" name="motpasse" required><br>
     </p>
+
     <p id="error-message" style="color: red;"></p>
 
     <p>
-        <input type="submit" value="Connexion" name="soumettre">
-        <input type="reset" value="Recommencer">
+        <p>
+            <button type="submit" name="soumettre">Connexion</button>
+            <button type="reset">Recommencer</button>
+        </p>
     </p>
     </form>
 
@@ -37,8 +40,8 @@
 {% endif %}
 
 <p>
-    Si vous n'avez pas de compte:
-    <input type="button" value="Créer un compte" onclick="window.location.href='/creation-compte';">
+    Si vous n'avez pas de compte :
+    <button type="button" onclick="window.location.href='/creation-compte';">Créer un compte</button>
 </p>
 
 </body>
