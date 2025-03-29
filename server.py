@@ -100,7 +100,7 @@ def inscription():
         flash("Le courriel est invalide !", "info")
         return redirect(url_for('creation-compte'))
 
-@app.route("/logout", methods=['POST'])
+@app.route("/logout/", methods=['GET', 'POST'])
 def logout():
     if 'user' in session:
         flash("Vous avez été déconnecté!", "info")
@@ -111,6 +111,8 @@ def logout():
 @app.route("/auteur/<int:auteur_id>", methods=['GET', 'POST'])
 def auteur(auteur_id):
     if "prenom" in session:
+        print(url_for("auteur_favori", auteur_id=1))
+
         lid = session['id']
         auteur = database.get_author_details(auteur_id, lid)
 
@@ -126,11 +128,10 @@ def auteur(auteur_id):
     # else:
     #     est_favori = bool(int(est_favori))  # Convertir en booléen
 
-    return render_template("auteur.html", auteur=auteur)
-    # else:
-        # return redirect(url_for('login'))
-
-
+        return render_template("auteur.html", auteur=auteur)
+    # si aucun utilisateur connecté
+    else:
+        return redirect(url_for('login'))
 
 @app.route("/auteur_favori/<int:auteur_id>", methods=["POST"])
 def auteur_favori (auteur_id):
@@ -149,7 +150,7 @@ def auteur_favori (auteur_id):
         if not auteur:
             return "Auteur non trouvé", 404
 
-    return redirect(url_for("afficher_auteur", auteur_id=auteur_id))
+    return redirect(url_for("auteur", auteur_id=auteur_id))
 
 @app.route("/noter-auteur/<int:auteur_id>/", methods=["POST"])
 def noter_auteur(auteur_id):
@@ -173,8 +174,8 @@ def noter_auteur(auteur_id):
     cur.close()
 
     # On récupère aussi est_favori pour éviter la requête SQL dans afficher_auteur
-    est_favori = request.args.get("favori", 0)
-    return redirect(url_for("afficher_auteur", auteur_id=auteur_id, favori=est_favori, note=note))
+    # est_favori = request.args.get("favori", 0)
+    return redirect(url_for("auteur", auteur_id=auteur_id, favori=est_favori, note=note))
 
 @app.route("/test")
 def test():

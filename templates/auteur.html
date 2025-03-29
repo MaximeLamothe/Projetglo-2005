@@ -5,10 +5,10 @@
 <div class="book-container">
     <div class="book-details row">
         <div class="book-cover">
-            <img src="{{ url_for('static', filename='{{auteur.photo}}) }}" alt="Couverture du livre">
+            <img src="{{ url_for('static', filename=auteur.photo) }}" alt="Couverture du livre">
         </div>
 
-        <!-- Informations sur l'auteur -->
+
         <div class="author-info" style="padding-left: 40px">
             <h2>{{ auteur.prenom }} {{ auteur.nom }}</h2>
             <p><strong>Prénom:</strong> {{ auteur.prenom }}</p>
@@ -16,8 +16,8 @@
             <p><strong>Style:</strong> {{ auteur.specialite }}</p>
 
             <form action="{{ url_for('auteur_favori', auteur_id=auteur.id) }}" method="post">
-                <input type="hidden" name="favori" value="{{ 'retirer' if favori else 'ajouter' }}">
-                <button type="submit" class="{% if favori %}retirer{% else %}ajouter{% endif %}">
+                <input type="hidden" name="favori" value="{{ 'retirer' if auteur.favori else 'ajouter' }}">
+                <button type="submit" class="{% if auteur.favori %}retirer{% else %}ajouter{% endif %}">
                 {% if auteur.favori %}
                     Retirer des favoris
                 {% else %}

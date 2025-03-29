@@ -200,8 +200,8 @@ class Database:
 
     def remove_favorite_author(self, aid, lid):
         try:
-            request = """DELETE FROM auteurpreferer WHERE lid=%s AND aid=%s;"""
-            self.cursor.execute(request, (lid, aid))
+            request = """DELETE FROM auteurpreferer WHERE idauteur=%s AND idlecteur=%s ;"""
+            self.cursor.execute(request, (aid, lid))
             self.connection.commit()
             return True
 
