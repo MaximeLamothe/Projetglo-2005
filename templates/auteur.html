@@ -5,9 +5,8 @@
 <div class="book-container">
     <div class="book-details row">
         <div class="book-cover">
-            <img src="{{ url_for('static', filename=auteur.photo) }}" alt="Couverture du livre">
+            <img src="{{ url_for('static', filename='Photos/'+auteur.photo) }}" alt="Photo de l'auteur">
         </div>
-
 
         <div class="author-info" style="padding-left: 40px">
             <h2>{{ auteur.prenom }} {{ auteur.nom }}</h2>

@@ -177,11 +177,6 @@ def noter_auteur(auteur_id):
     # est_favori = request.args.get("favori", 0)
     return redirect(url_for("auteur", auteur_id=auteur_id, favori=est_favori, note=note))
 
-@app.route("/test")
-def test():
-    list = [1, 2, 3, 4, 5]
-    return render_template("test.html", list=list)
-
 @app.route("/mabiblio/")
 def mabiblio():
     # Vérifier si l'utilisateur est connecté
