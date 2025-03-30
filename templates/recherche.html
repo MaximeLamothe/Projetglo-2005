@@ -29,7 +29,7 @@
         </div>
 
         <div class="search-button-container" style="margin-top: 20px; display: flex; justify-content: center;">
-            <button type="submit" class="search-button">🔍</button>
+            <button type="submit" class="search-button"style="background-color: #cccccc;">🔍</button>
 
 </div>
 
@@ -44,7 +44,7 @@
                 <div class="book-card row">
                     <div class="book-cover">
                         <!-- Afficher la couverture du livre ici si disponible -->
-                        <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                        <img src="{{ url_for('static', filename='Photos/' ~ livre[5]) }}" alt="Couverture">
                         <div style="height: 50px;"></div>
                     </div>
                     <div class="book-info" style="padding-left: 40px">
@@ -55,8 +55,6 @@
                             <strong>{{ livre[1] }}</strong>
                         </a>
                     </div>
-
-
                         <div style="height: 50px;"></div>
                     <div class="book-annee">{{ livre[3] }}</div>
                     </div>

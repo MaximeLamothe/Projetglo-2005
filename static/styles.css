@@ -161,7 +161,8 @@ input {
 
 
 .info-text {
-    color: #0000FF; /* Bleu saturé */
+    color: #6E462E;
+    font-size: 20px;
 }
 
 
@@ -222,4 +223,10 @@ h1.centre {
     flex-basis: 50%;
 }
 
+.star {
+    color: gray;
+}
 
+.checked {
+    color: gold;
+}

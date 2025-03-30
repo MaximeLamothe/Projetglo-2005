@@ -6,7 +6,7 @@
 <div class="book-container">
     <div class="book-details row">
         <div class="book-cover">
-            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture du livre">
+            <img src="{{ url_for('static', filename='Photos/l' ~ livre.lid ~ '.jpg') }}" alt="Couverture du livre">
         </div>
 
         <!-- Informations du livre -->
@@ -19,12 +19,52 @@
             <p><strong>Auteur:</strong>
                 <a href="{{ url_for('auteur', auteur_id=livre.aid) }}">{{ livre.prenom }} {{ livre.nom }}</a>
             </p>
-            <button class="note-button" style = "font-size: 20px;" >Noter</button>
-            <button class="add-button" style = "font-size: 20px;" >Ajouter</button>
+        </div>
+        <div class="bouton-modification droite" style="padding-left: 200px">
+
+            <!-- Formulaire pour ajouter ou retirer le livre -->
+            <form action="{{ url_for('modifier_bibliotheque', lid=livre.lid) }}" method="post">
+                {% if est_dans_biblio %}
+                    <input type="hidden" name="action" value="retirer">
+                    <button type="submit" class="retirer" style="font-size: 20px;">Retirer de ma bibliothèque</button>
+                {% else %}
+
+                    <select name="statut" id="statut" required>
+                        <option value="a lire" {% if statut =='a_lire' %}selected{% endif %}>À lire</option>
+                        <option value="lu" {% if statut =='lu' %}selected{% endif %}>Lu</option>
+                        <option value="en cours" {% if statut =='a_acheter' %}selected{% endif %}>En cours</option>
+                    </select>
+                    <input type="hidden" name="action" value="ajouter">
+                    <button type="submit" class="ajouter" style="font-size: 20px;">Ajouter à ma bibliothèque</button>
+                {% endif %}
+            </form>
+
+            <!-- Formulaire pour noter le livre -->
+            <div class="rating">
+                {% for i in range(5) %}
+                    {% if i < note_actuelle %}
+                        <span class="star checked" style="font-size: 20px;">&#9733;</span>
+                    {% else %}
+                        <span class="star" style="font-size: 20px;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <form action="{{ url_for('livre_details', lid=livre.lid) }}" method="POST">
+                <select name="rating" id="rating">
+                    <option value="1" {% if note_actuelle == 1 %}selected{% endif %}>1</option>
+                    <option value="2" {% if note_actuelle == 2 %}selected{% endif %}>2</option>
+                    <option value="3" {% if note_actuelle == 3 %}selected{% endif %}>3</option>
+                    <option value="4" {% if note_actuelle == 4 %}selected{% endif %}>4</option>
+                    <option value="5" {% if note_actuelle == 5 %}selected{% endif %}>5</option>
+                </select>
+                <button type="submit" class="note-button" style="font-size: 20px;">Noter</button>
+            </form>
+
+
         </div>
     </div>
             <!-- Étoiles de notation -->
-    <div class="rating" style="padding-left: 50px">
+    <div class="rating" style="padding-left: 46px">
                 {% for i in range(5) %}
                     {% if i < livre.note %}
                         <span class="star checked" style = "font-size: 30px;" >&#9733; </span>
@@ -55,8 +95,8 @@
         {% for commentaire in commentaires %}
             <div class="comment">
                 <p class="comment-content">{{ commentaire.contenu }}</p>
-                <p class="comment-author"><strong>{{ commentaire.lecteur }}</strong></p>
-                <a class = "info-text" href="/repondre/{{ commentaire.id }}">Répondre</a>
+                <p class="comment-author"><strong>{{ commentaire.prenom }} {{commentaire.nom}}</strong></p>
+                <a class = "info-text" href="/repondre/{{ commentaire.reponse }}">Répondre</a>
             </div>
         {% endfor %}
     </div>

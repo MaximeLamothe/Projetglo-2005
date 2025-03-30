@@ -34,7 +34,7 @@ class Database:
     def get_book_details(self, lid):
         try:
             request = f"""
-                    SELECT titre, genre, annee, maison_edition, nombre_de_pages, livres.note, auteurs.prenom, auteurs.nom, auteurs.aid
+                    SELECT titre, genre, annee, maison_edition, nombre_de_pages, livres.note, auteurs.prenom, auteurs.nom, auteurs.aid, livres.lid
                     FROM livres, auteurs, ecrire
                     WHERE livres.lid = ecrire.idlivre AND auteurs.aid = ecrire.idauteur AND livres.lid =%s"""
             self.cursor.execute(request, (lid,))
@@ -52,6 +52,7 @@ class Database:
                     'prenom': book[6],
                     'nom' : book[7],
                     'aid': book[8],
+                    'lid': book[9],
                 }
             else:
                 print(f"Erreur: Aucun livre trouvé avec l'ID {lid}")
@@ -63,18 +64,31 @@ class Database:
     # Fonction pour récupérer les commentaires d'un livre
     def get_comments_for_book(self, lid):
         try:
-            query = f"""
-                SELECT c.contenu, l.prenom || ' ' || l.nom AS lecteur
-                FROM commentaires c
-                JOIN lecteurs l ON c.idlecteur = l.id
-                WHERE c.idlivre = %s """
+            query = """
+                        SELECT c.contenu, l.prenom, l.nom, c.réponsecid
+                        FROM commentaires c
+                        JOIN lecteurs l ON c.idlecteur = l.id
+                        WHERE c.idlivre = %s
+                    """
             self.cursor.execute(query, (lid,))
             comments = self.cursor.fetchall()  # Récupère toutes les lignes
 
-            return comments
+            if not comments:
+                return []  # Retourner une liste vide si aucun commentaire
+
+            # Transformer les résultats en liste de dictionnaires
+            return [
+                {
+                    'contenu': comment[0],
+                    'prenom': comment[1],
+                    'nom': comment[2],
+                    'reponse': comment[3]  # Peut être NULL
+                }
+                for comment in comments
+            ]
         except Exception as e:
             print(f"Error while getting comments for book: {e}")
-            return None
+            return []
 
     def search_books(self, auteur=None, annee=None, titre=None, maison=None, filtre=None):
         try:
@@ -297,4 +311,95 @@ class Database:
 
         except Exception as e:
             print(f"Error while fetching books by author: {e}")
+            return None
+
+    def get_favorite_author_ids(self, lid):
+        try:
+            query = "SELECT idauteur FROM auteurpreferer WHERE idlecteur = %s"
+            self.cursor.execute(query, (lid,))
+            return [row[0] for row in self.cursor.fetchall()]
+        except Exception as e:
+            print(f"Erreur en récupérant les auteurs favoris : {e}")
+            return []
+
+    def is_book_in_library(self, lid, book_id):
+        try:
+            request = "SELECT COUNT(*) FROM lire WHERE idlecteur = %s AND idlivre = %s"
+            self.cursor.execute(request, (lid, book_id))
+            return self.cursor.fetchone()[0] > 0
+        except Exception as e:
+            print(f"Erreur en vérifiant si le livre {book_id} est dans la bibliothèque de {lid}: {e}")
+            return False
+
+    def get_book_status(self, lid, book_id):
+        try:
+            request = """SELECT statut FROM lire WHERE idlecteur = %s AND idlivre = %s"""
+            self.cursor.execute(request, (lid, book_id))
+            result = self.cursor.fetchone()
+            return result[0] if result else None
+        except Exception as e:
+            print(f"Erreur en récupérant le statut du livre {book_id} pour {lid}: {e}")
+            return None
+
+    def add_book_to_library(self, lid, book_id, statut):
+        try:
+            request = """INSERT INTO lire (idlecteur, idlivre, statut) VALUES (%s, %s, %s);"""
+            self.cursor.execute(request, (lid, book_id, statut))
+            self.connection.commit()
+            return True
+        except Exception as e:
+            print(f"Erreur en ajoutant le livre {book_id} à la bibliothèque de {lid}: {e}")
+            return False
+
+    def remove_book_from_library(self, lid, book_id):
+        try:
+            request = """DELETE FROM lire WHERE idlecteur=%s AND idlivre=%s;"""
+            self.cursor.execute(request, (lid, book_id))
+            self.connection.commit()
+            return True
+        except Exception as e:
+            print(f"Erreur en retirant le livre {book_id} de la bibliothèque de {lid}: {e}")
+            return False
+
+    def ajouter_ou_mettre_a_jour_note(self, lid, utilisateur_id, note):
+        try:
+            # Vérifier si l'utilisateur a déjà noté ce livre
+            requete = """
+                SELECT idlecteur FROM noter WHERE idlivre = %s AND idlecteur = %s
+            """
+            self.cursor.execute(requete, (lid, utilisateur_id))
+            note_existante = self.cursor.fetchone()
+
+            if note_existante:
+                # Si la note existe déjà, mettre à jour
+                requete_update = """
+                    UPDATE noter SET note = %s WHERE idlivre = %s AND idlecteur = %s
+                """
+                self.cursor.execute(requete_update, (note, lid, utilisateur_id))
+            else:
+                # Si la note n'existe pas, insérer une nouvelle note
+                requete_insert = """
+                    INSERT INTO noter (idlivre, idlecteur, note) VALUES (%s, %s, %s)
+                """
+                self.cursor.execute(requete_insert, (lid, utilisateur_id, note))
+
+            self.connection.commit()
+            return True
+        except Exception as e:
+            print(f"Erreur lors de l'ajout ou de la mise à jour de la note: {e}")
+            return False
+
+    def recuperer_note_utilisateur_pour_livre(self, lid, utilisateur_id):
+        try:
+            requete = """
+                SELECT note FROM noter WHERE idlivre = %s AND idlecteur = %s
+            """
+            self.cursor.execute(requete, (lid, utilisateur_id))
+            note = self.cursor.fetchone()
+
+            if note:
+                return note[0]  # Retourne la note de l'utilisateur
+            return 0  # Si l'utilisateur n'a pas encore noté ce livre
+        except Exception as e:
+            print(f"Erreur lors de la récupération de la note pour le livre {lid}: {e}")
             return None

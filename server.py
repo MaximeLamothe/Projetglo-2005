@@ -178,76 +178,122 @@ def noter_auteur(auteur_id):
 
 @app.route("/mabiblio/")
 def mabiblio():
-    # Vérifier si l'utilisateur est connecté
-    # if 'user_id' not in session:
-       #  return redirect(url_for('login'))  # Rediriger vers la page de connexion si non connecté
+    if "prenom" in session:
+        lid = session['id'] # Récupérer l'ID de l'utilisateur connecté
 
-    id = 1  # Récupérer l'ID de l'utilisateur connecté
+        try:
+            # Récupérer les livres pour chaque statut
+            livres_lus = database.get_books_by_status(lid, 'lu')
+            livres_lus_count = len(livres_lus)
 
-    try:
-        # Récupérer les livres pour chaque statut
-        livres_lus = database.get_books_by_status(id, 'lu')
-        livres_lus_count = len(livres_lus)
+            livres_a_lire = database.get_books_by_status(lid, 'a lire')
+            livres_a_lire_count = len(livres_a_lire)
 
-        livres_a_lire = database.get_books_by_status(id, 'a_lire')
-        livres_a_lire_count = len(livres_a_lire)
+            livres_a_acheter = database.get_books_by_status(lid, 'en cours')
+            livres_a_acheter_count = len(livres_a_acheter)
 
-        livres_a_acheter = database.get_books_by_status(id, 'a_acheter')
-        livres_a_acheter_count = len(livres_a_acheter)
+            # Récupérer les auteurs favoris
+            auteurs_favoris_ids = database.get_favorite_author_ids(lid)
+            auteurs_favoris = [database.get_author_details(aid, lid) for aid in auteurs_favoris_ids]
 
-        # Rendre la page avec les livres par statut
-        return render_template('mabiblio.html',
-                               livres_lus=livres_lus, livres_lus_count=livres_lus_count,
-                               livres_a_lire=livres_a_lire, livres_a_lire_count=livres_a_lire_count,
-                               livres_a_acheter=livres_a_acheter, livres_a_acheter_count=livres_a_acheter_count)
+            # Rendre la page avec les livres par statut
+            return render_template('mabiblio.html',
+                                   livres_lus=livres_lus, livres_lus_count=livres_lus_count,
+                                   livres_a_lire=livres_a_lire, livres_a_lire_count=livres_a_lire_count,
+                                   livres_a_acheter=livres_a_acheter, livres_a_acheter_count=livres_a_acheter_count,
+                                   auteurs_favoris=auteurs_favoris)
 
-    except Exception as e:
-        print(f"Error while fetching user's books: {e}")
-        return render_template('mabiblio.html', error="Erreur lors du chargement des livres.")
+        except Exception as e:
+            print(f"Error while fetching user's books: {e}")
+            return render_template('mabiblio.html', error="Erreur lors du chargement des livres.")
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route("/profil/")
 def profil():
-    # TODO: Recuperer le vrai ID de l'utilisateur connecté
-    id = 1  # Récupérer l'ID de l'utilisateur connecté
+    if "prenom" in session:
 
-    # Récupérer les informations de l'utilisateur
-    user_info = database.get_user_info(id)
+        lid = session['id']  # Récupérer l'ID de l'utilisateur connecté
 
-    # Si l'utilisateur n'existe pas, retourner une erreur
-    if not user_info:
-        return "Utilisateur non trouvé", 404
+        # Récupérer les informations de l'utilisateur
+        user_info = database.get_user_info(lid)
 
-    # Rendre la page de profil avec les informations récupérées
-    return render_template('profil.html', **user_info)
+        # Rendre la page de profil avec les informations récupérées
+        return render_template('profil.html', **user_info)
+
+    else:
+        return redirect(url_for('login'))
 @app.route('/recherche/', methods=['GET', 'POST'])
 def recherche():
-    if request.method == 'POST':
-        auteur = request.form.get('auteur', '')
-        annee = request.form.get('annee', '')
-        titre = request.form.get('titre', '')
-        maison = request.form.get('maison', '')
-        filtre = request.form.get('filtre', '')
+    if "prenom" in session:
+        if request.method == 'POST':
+            auteur = request.form.get('auteur', '')
+            annee = request.form.get('annee', '')
+            titre = request.form.get('titre', '')
+            maison = request.form.get('maison', '')
+            filtre = request.form.get('filtre', '')
 
-        livres_trouves = database.search_books(auteur, annee, titre, maison, filtre)
+            livres_trouves = database.search_books(auteur, annee, titre, maison, filtre)
+        else:
+            livres_trouves = []
+
+        return render_template('recherche.html', livres=livres_trouves)
     else:
-        livres_trouves = []
-
-    return render_template('recherche.html', livres=livres_trouves)
-@app.route('/livre/<int:lid>')
+        return redirect(url_for('login'))
+@app.route('/livre/<int:lid>', methods=['GET', 'POST'])
 def livre_details(lid):
-    # Récupérer les détails du livre
-    book = database.get_book_details(lid)
+    if "prenom" in session:
+        uid = session['id']  # Récupérer l'ID de l'utilisateur connecté
 
-    # Si le livre n'existe pas, retourner une erreur
-    if not book:
-        return "Livre non trouvé", 404
+        # Récupérer les détails du livre
+        book = database.get_book_details(lid)
 
-    # Récupérer les commentaires du livre
-    comments = database.get_comments_for_book(lid)
+        # Si le livre n'existe pas, retourner une erreur
+        if not book:
+            return "Livre non trouvé", 404
 
-    # Rendre la page livre.html avec les informations
-    return render_template('livre.html', livre=book, commentaires=comments)
+        # Vérifier si le livre est déjà dans la bibliothèque de l'utilisateur
+        est_dans_biblio = database.is_book_in_library(uid, lid)
+
+        if est_dans_biblio:
+            # Récupérer le statut du livre dans la bibliothèque
+            statut = database.get_book_status(uid, lid)
+        else:
+            statut = None
+
+        # Récupérer les commentaires du livre
+        comments = database.get_comments_for_book(lid)
+
+        # Récupérer la note actuelle de l'utilisateur pour ce livre
+        note_actuelle = database.recuperer_note_utilisateur_pour_livre(lid, uid)
+
+        if request.method == 'POST':
+            note = int(request.form['rating'])
+            # Ajouter ou mettre à jour la note dans la base de données
+            database.ajouter_ou_mettre_a_jour_note(lid, uid, note)
+            return redirect(url_for('livre_details', lid=lid))  # Recharger la page après modification
+
+        # Rendre la page livre.html avec les informations
+        return render_template('livre.html', livre=book, est_dans_biblio=est_dans_biblio, statut=statut, commentaires=comments, note_actuelle=note_actuelle)
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/modifier_bibliotheque/<int:lid>", methods=["POST"])
+def modifier_bibliotheque(lid):
+    if "prenom" not in session:
+        return redirect(url_for("login"))
+
+    uid = session["id"]
+    action = request.form.get("action")
+
+    if action == "ajouter":
+        statut = request.form.get("statut")  # Récupérer le statut choisi
+        database.add_book_to_library(uid, lid, statut)
+    elif action == "retirer":
+        database.remove_book_from_library(uid, lid)
+
+    return redirect(url_for("livre_details", lid=lid))
 
 if __name__ == "__main__":
     app.run(debug=True)

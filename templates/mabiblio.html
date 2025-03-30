@@ -9,12 +9,12 @@
         <!-- Section "Lus" -->
         <div class="library-section">
             <h2>Livres lus</h2>
-            <p>{{ livres_lus_count }} livre(s) lu(s)</p>
+            <p class="info-text">{{ livres_lus_count }} livre(s) lu(s)</p>
             <div class="book-grid">
                 {% for livre in livres_lus %}
                     <div class="book-card">
                         <div class="book-cover">
-                            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                            <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture">
                         </div>
                         <div class="book-info">
                             <div class="book-title">
@@ -33,12 +33,12 @@
         <!-- Section "À lire" -->
         <div class="library-section">
             <h2>Livres à lire</h2>
-            <p>{{ livres_a_lire_count }} livre(s) à lire</p>
+            <p class="info-text">{{ livres_a_lire_count }} livre(s) à lire</p>
             <div class="book-grid">
                 {% for livre in livres_a_lire %}
                     <div class="book-card">
                         <div class="book-cover">
-                            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                            <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture">
                         </div>
                         <div class="book-info">
                             <div class="book-title">
@@ -56,13 +56,13 @@
 
         <!-- Section "À acheter" -->
         <div class="library-section">
-            <h2>Livres à acheter</h2>
-            <p>{{ livres_a_acheter_count }} livre(s) à acheter</p>
+            <h2>Livres en cours de lecture</h2>
+            <p class="info-text">{{ livres_a_acheter_count }} livre(s) en cours </p>
             <div class="book-grid">
                 {% for livre in livres_a_acheter %}
                     <div class="book-card">
                         <div class="book-cover">
-                            <img src="{{ url_for('static', filename='couverture_exemple.jpg') }}" alt="Couverture">
+                            <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture">
                         </div>
                         <div class="book-info">
                             <div class="book-title">
@@ -77,5 +77,37 @@
                 {% endfor %}
             </div>
         </div>
+
+        <!-- Section "Auteurs favoris" -->
+        <div class="library-section">
+            <h2>Auteurs favoris</h2>
+            <p class="info-text">{{ auteurs_favoris|length }} auteur(s) favori(s)</p>
+            <div class="book-grid">
+                {% for auteur in auteurs_favoris %}
+                    <div class="book-card row">
+                        <div class="book-cover img">
+                            <!-- Afficher la photo de l'auteur -->
+                            <img src="{{ url_for('static', filename='Photos/'+auteur.photo) }}" alt="Photo de l'auteur">
+                            <div style="height: 50px;"></div>
+                        </div>
+
+                        <div class="auteur-info" style=" padding-left: 40px">
+                            <div style="height: 50px;"></div>
+                            <span>({{ auteur.surnom }})</span><br>
+                            <div style="height: 50px;"></div>
+                            <strong> <a href="{{ url_for('auteur', auteur_id=auteur.id) }}">
+                                {{ auteur.prenom }} {{ auteur.nom }}
+                            </a>
+                            </strong> <br>
+                            <div style="height: 50px;"></div>
+                            <span> Spécialité : {{ auteur.specialite }}</span><br>
+
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 {% endblock %}
