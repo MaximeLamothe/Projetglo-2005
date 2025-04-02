@@ -1,9 +1,12 @@
 import re
 from flask import Flask, render_template, Response, request, redirect, url_for, session, flash
+import password_hash
 
 from setuptools.command.easy_install import sys_executable
 
+
 from database import Database
+from password_hash import verify_password
 
 app = Flask(__name__)
 app.secret_key = '9588203'
@@ -22,17 +25,17 @@ def base():
 def login():
     if request.method == "POST":
         courriel = request.form.get("courriel")
-        passe = request.form.get("motpasse")
+        mdp = request.form.get("motpasse")
 
         # REGEX pour le courriel
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
         # si le courriel est dans le bon format
         if re.match(email_pattern, courriel):
-            # Aller chercher le mot de passe associé au courriel
-            passeVrai = database.get_password(courriel)
+            # Aller chercher le mot de passe chiffré (dans la BD) associé au courriel
+            mdp_BD = database.get_password(courriel)
 
-            if (passeVrai!=None) and (passe==passeVrai[0]):
+            if (mdp_BD!=None) and (password_hash.verify_password(mdp, mdp_BD)):
                 info = database.connexion(courriel)
 
                 # Initialisation de la session
@@ -85,7 +88,8 @@ def inscription():
             return redirect(url_for('creationcompte'))
 
         else:
-            valide = database.add_user(prenom, nom, surnom, age, courriel, sexe, motpasse)
+            motpasse_chiffre = password_hash.hash_password(motpasse)
+            valide = database.add_user(prenom, nom, surnom, age, courriel, sexe, motpasse_chiffre)
             if valide:
                 flash("Votre compte a été créé!", "info")
                 return redirect(url_for('login'))  # Rediriger l'utilisateur vers la page login
