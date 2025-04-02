@@ -1,122 +1,87 @@
-// Fonction qui valide le format du courriel avant de l'envoyer au serveur
-
+// Fonction qui relie les fonctions de validation de courriel et de mot de passe à la soumission du formulaire
 document.addEventListener("DOMContentLoaded", function () {
-    let emailForm = document.getElementById("emailForm");
-    if (emailForm) {
-        emailForm.addEventListener("submit", function (event) {
+    let registerForm = document.getElementById("registerForm");
+    if (registerForm) {
+        registerForm.addEventListener("submit", function (event) {
             // Validate Email
             if (!validateEmail()) {
-                event.preventDefault(); // Prevent form submission if email is invalid
+                event.preventDefault(); // Empêcher la soumission du formulaire si le courriel est invalide
             }
 
             // Validate Password
             if (!validatePassword()) {
-                event.preventDefault(); // Prevent form submission if password is invalid
+                event.preventDefault(); // Empêcher la soumission du formulaire si le mot de passe est invalide
             }
         });
     }
 });
 
-// Function to validate email
+// Fonction pour valider le format du courriel
 function validateEmail() {
     let emailInput = document.getElementById("courriel").value;
     let errorMessage = document.getElementById("error-message");
 
-    // Regex for email validation
+    // Regex pour le courriel
     let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    // Check if email matches the pattern
+    // vérifier que le courriel respecte le bon format
     if (!emailPattern.test(emailInput)) {
         if (errorMessage) {
             errorMessage.textContent = "Veuillez entrer une adresse courriel valide";
             errorMessage.style.color = "red";
         }
-        return false; // Invalid email
+        return false; // courriel invalide
     } else {
         if (errorMessage) {
-            errorMessage.textContent = ""; // Clear error message if email is valid
+            errorMessage.textContent = ""; // Aucun message d'erreur si courriel valide
         }
-        return true; // Valid email
+        return true; // courriel valide
     }
 }
 
-// Function to validate password
 function validatePassword() {
     let prenom = document.getElementById("prenom").value.toLowerCase();
     let nom = document.getElementById("nom").value.toLowerCase();
     let surnom = document.getElementById("surnom").value.toLowerCase();
     let password = document.getElementById("motpasse").value.toLowerCase();
+    let errorMessage = document.getElementById("password-error-message");
 
-    // Check if password contains the first name, last name, or username
+    // Enlever le message d'erreur précédent
+    if (errorMessage) {
+        errorMessage.textContent = "";
+    }
+
+    // Vérifier si le mot de passe contient le prénom
     if (password.includes(prenom)) {
-        alert("Le mot de passe ne peut pas contenir votre prénom");
+        showPasswordError("Le mot de passe ne peut pas contenir votre prénom");
         return false;
     }
+    // Vérifier si le mot de passe contient le nom
     if (password.includes(nom)) {
-        alert("Le mot de passe ne peut pas contenir votre nom");
+        showPasswordError("Le mot de passe ne peut pas contenir votre nom");
         return false;
     }
+    // Vérifier si le mot de passe contient le surnom/nom d'utilisateur
     if (password.includes(surnom)) {
-        alert("Le mot de passe ne peut pas contenir votre nom d'utilisateur");
+        showPasswordError("Le mot de passe ne peut pas contenir votre nom d'utilisateur");
         return false;
     }
 
-    // Password length and format validation
+    // Longueur du mot de passe et format
     let passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,}$/;
+
     if (!passwordPattern.test(password)) {
-        alert("Le mot de passe doit contenir au moins un chiffre, une lettre majuscule, une lettre minuscule et un caractère spécial.");
+        showPasswordError("Le mot de passe doit contenir au moins un chiffre, une lettre majuscule, une lettre minuscule et un caractère spécial.");
         return false;
     }
 
-    return true; // Valid password
+    return true; // Mot de passe valide
 }
 
-
-/* document.addEventListener("DOMContentLoaded", function () {
-    let emailForm = document.getElementById("emailForm"); // essayer d'obtenir emailForm de la page
-    if (emailForm) {  // validation seulement si email form sur la page
-        document.getElementById("emailForm").addEventListener("submit", function (event) {
-        let emailInput = document.getElementById("courriel").value;
-        let errorMessage = document.getElementById("error-message");
-
-        // REGEX pour l'adresse courriel
-        let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        if (!emailPattern.test(emailInput)) {
-            event.preventDefault(); // Empêcher la soumission du formulaire
-            if (errorMessage) {
-                errorMessage.textContent = "Veuillez entrer une adresse courriel valide";
-                errorMessage.style.color = "red";
-                }
-            } else if (errorMessage) {
-                errorMessage.textContent = ""; // Aucun message d'erreur
-            }
-    });
-});
-
-// Fonction qui valide le mot de passe avant de l'envoyer au serveur. La fonction vérifie que le mot de passe
-// ne contient pas le prénom, le nom, ni le nom d'utilisateur
-
-function validatePassword() {
-    let prenom = document.getElementById("prenom").value.toLowerCase();
-    let nom = document.getElementById("nom").value.toLowerCase();
-    let surnom = document.getElementById("surnom").value.toLowerCase();
-
-    let password = document.getElementById("password").value.toLowerCase();
-
-    if (password.includes(prenom)) {
-        alert("Le mot de passe ne peut pas contenir votre prénom");
-        return false;
+function showPasswordError(message) {
+    let errorMessage = document.getElementById("password-error-message");
+    if (errorMessage) {
+        errorMessage.textContent = message;
+        errorMessage.style.color = "red";
     }
-    if (password.includes(nom)) {
-        alert("Le mot de passe ne peut pas contenir votre nom");
-        return false;
-    }
-    if (password.includes(surnom)) {
-        alert("Le mot de passe ne peut pas contenir votre nom d'utilisateur");
-        return false;
-    }
-
-    return true;
-} */
-
+}

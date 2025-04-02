@@ -19,7 +19,7 @@
     {%endif%}
   {%endwith%}
 
-  <form id="emailForm" action="inscription" method="post">
+  <form id="registerForm" action="inscription" method="post">
       <label for="prenom">Prénom</label><br>
       <input type="text" id = "prenom" name="prenom" maxlength="20" required><br>
       <label for="nom">Nom</label><br>
@@ -41,6 +41,7 @@
 
       <label for="motpasse"> Mot de passe: </label><br>
       <input type="password" id="motpasse" name="motpasse" minlength="6" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,}" required><br>
+      <p id="password-error-message" style="color: red;"></p>
       Le mot de passe:
       <ul>
         <li>Doit contenir au moins 6 caractères</li>
