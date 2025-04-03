@@ -28,8 +28,8 @@ CREATE TABLE `lecteurs` (
   `nom` varchar(50) NOT NULL,
   `surnom` varchar(50) NOT NULL,
   `age` int DEFAULT NULL,
-  `email` varchar(50) NOT NULL,
-  `motdepasse` varchar(50) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `motdepasse` varchar(255) DEFAULT NULL,
   `nombrelivreslus` int DEFAULT NULL,
   `sexe` enum('homme','femme','autre') NOT NULL,
   PRIMARY KEY (`id`),
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-28 18:50:43
+-- Dump completed on 2025-04-02 19:58:33

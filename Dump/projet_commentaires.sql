@@ -26,7 +26,7 @@ CREATE TABLE `commentaires` (
   `cid` int NOT NULL,
   `idlecteur` int DEFAULT NULL,
   `idlivre` int DEFAULT NULL,
-  `contenu` varchar(200) NOT NULL,
+  `contenu` varchar(500) DEFAULT NULL,
   `réponsecid` int DEFAULT NULL,
   PRIMARY KEY (`cid`),
   KEY `idlecteur` (`idlecteur`),
@@ -77,4 +77,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-28 18:50:43
+-- Dump completed on 2025-04-02 19:58:33

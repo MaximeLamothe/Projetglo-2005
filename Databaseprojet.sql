@@ -3,8 +3,8 @@ show triggers;
 
 select * from noter;
 select * from livres;
-select * from lecteurs;
+select * from auteurs;
 select * from auteurpreferer;
-select * from commentaires;
+show fields from commentaires;
 select * from repondre;
 

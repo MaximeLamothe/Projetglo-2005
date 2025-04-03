@@ -24,10 +24,10 @@ DROP TABLE IF EXISTS `livres`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `livres` (
   `lid` int NOT NULL,
-  `titre` varchar(50) NOT NULL,
+  `titre` varchar(255) DEFAULT NULL,
   `genre` varchar(50) NOT NULL,
   `annee` int DEFAULT NULL,
-  `maison_edition` varchar(50) DEFAULT NULL,
+  `maison_edition` varchar(255) DEFAULT NULL,
   `couverture` varchar(50) DEFAULT NULL,
   `nombre_de_pages` int DEFAULT NULL,
   `note` decimal(3,2) DEFAULT NULL,
@@ -80,4 +80,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-28 18:50:43
+-- Dump completed on 2025-04-02 19:58:33
