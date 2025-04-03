@@ -255,6 +255,7 @@ class Database:
             request = 'SELECT motdepasse FROM lecteurs WHERE email = %s;'
             self.cursor.execute(request, (email,))
             result = self.cursor.fetchone()
+            result = result[0] if result else None
             return result
 
         except Exception as e:

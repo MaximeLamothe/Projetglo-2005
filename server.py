@@ -35,7 +35,7 @@ def login():
             # Aller chercher le mot de passe chiffré (dans la BD) associé au courriel
             mdp_BD = database.get_password(courriel)
 
-            if (mdp_BD!=None) and (password_hash.verify_password(mdp, mdp_BD)):
+            if (mdp_BD is not None) and (password_hash.verify_password(mdp, mdp_BD)):
                 info = database.connexion(courriel)
 
                 # Initialisation de la session
