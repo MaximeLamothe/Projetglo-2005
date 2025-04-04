@@ -251,6 +251,7 @@ def livre_details(lid):
         uid = session['id']  # Récupérer l'ID de l'utilisateur connecté
 
         # Récupérer les détails du livre
+        session["livre_id_actuel"] = lid
         book = database.get_book_details(lid)
 
         # Si le livre n'existe pas, retourner une erreur
@@ -283,6 +284,23 @@ def livre_details(lid):
     else:
         return redirect(url_for('login'))
 
+@app.route("/ajouter_commentaire", methods=["POST"])
+def ajouter_commentaire():
+    if "prenom" not in session:
+        return redirect(url_for("login"))
+
+    contenu = request.form["contenu"]
+    reponsecid = request.form.get("reponsecid")
+    if reponsecid == "":
+        reponsecid = None
+
+    utilisateur_id = session["id"]
+    livre_id = session.get("livre_id_actuel")  # À définir temporairement dans session
+
+    database.ajouter_commentaire(utilisateur_id, livre_id, contenu, reponsecid)
+    return redirect(url_for("livre_details", lid=livre_id))
+
+
 @app.route("/modifier_bibliotheque/<int:lid>", methods=["POST"])
 def modifier_bibliotheque(lid):
     if "prenom" not in session:
@@ -298,6 +316,7 @@ def modifier_bibliotheque(lid):
         database.remove_book_from_library(uid, lid)
 
     return redirect(url_for("livre_details", lid=lid))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

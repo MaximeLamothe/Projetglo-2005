@@ -230,3 +230,36 @@ h1.centre {
 .checked {
     color: gold;
 }
+
+.comments {
+    margin-top: 50px;
+}
+
+.comment {
+    background-color: #fff;
+    border-left: 4px solid #ccc;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.comment-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.comment-content {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.comment-reply-info {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 5px;
+    font-style: italic;
+}

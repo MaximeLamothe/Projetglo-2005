@@ -65,29 +65,35 @@ class Database:
     def get_comments_for_book(self, lid):
         try:
             query = """
-                        SELECT c.contenu, l.prenom, l.nom, c.réponsecid
-                        FROM commentaires c
-                        JOIN lecteurs l ON c.idlecteur = l.id
-                        WHERE c.idlivre = %s
-                    """
+                SELECT c.cid, c.contenu, l.prenom, l.nom, c.réponsecid,
+                       l2.prenom AS prenom_reponse, l2.nom AS nom_reponse
+                FROM commentaires c
+                JOIN lecteurs l ON c.idlecteur = l.id
+                LEFT JOIN commentaires c2 ON c.réponsecid = c2.cid
+                LEFT JOIN lecteurs l2 ON c2.idlecteur = l2.id
+                WHERE c.idlivre = %s
+                ORDER BY c.cid ASC
+            """
             self.cursor.execute(query, (lid,))
-            comments = self.cursor.fetchall()  # Récupère toutes les lignes
+            comments = self.cursor.fetchall()
 
             if not comments:
-                return []  # Retourner une liste vide si aucun commentaire
+                return []
 
-            # Transformer les résultats en liste de dictionnaires
             return [
                 {
-                    'contenu': comment[0],
-                    'prenom': comment[1],
-                    'nom': comment[2],
-                    'reponse': comment[3]  # Peut être NULL
+                    'cid': comment[0],
+                    'contenu': comment[1],
+                    'prenom': comment[2],
+                    'nom': comment[3],
+                    'reponse': comment[4],  # cid auquel on répond
+                    'prenom_reponse': comment[5],  # prénom du lecteur d’origine
+                    'nom_reponse': comment[6]  # nom du lecteur d’origine
                 }
                 for comment in comments
             ]
         except Exception as e:
-            print(f"Error while getting comments for book: {e}")
+            print(f"Erreur lors de la récupération des commentaires : {e}")
             return []
 
     def search_books(self, auteur=None, annee=None, titre=None, maison=None, filtre=None):
@@ -404,3 +410,14 @@ class Database:
         except Exception as e:
             print(f"Erreur lors de la récupération de la note pour le livre {lid}: {e}")
             return None
+
+    def ajouter_commentaire(self, utilisateur_id, livre_id, contenu, reponsecid=None):
+        try:
+            requete = """
+                INSERT INTO commentaires (idlecteur, idlivre, contenu, réponsecid)
+                VALUES (%s, %s, %s, %s)
+            """
+            self.cursor.execute(requete, (utilisateur_id, livre_id, contenu, reponsecid))
+            self.connection.commit()
+        except Exception as e:
+            print(f"Erreur lors de l'ajout du commentaire : {e}")
