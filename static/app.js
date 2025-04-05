@@ -43,7 +43,8 @@ function validatePassword() {
     let prenom = document.getElementById("prenom").value.toLowerCase();
     let nom = document.getElementById("nom").value.toLowerCase();
     let surnom = document.getElementById("surnom").value.toLowerCase();
-    let password = document.getElementById("motpasse").value.toLowerCase();
+    let password = document.getElementById("motpasse").value;
+    let password_lowercase= password.toLowerCase()
     let errorMessage = document.getElementById("password-error-message");
 
     // Enlever le message d'erreur précédent
@@ -52,17 +53,17 @@ function validatePassword() {
     }
 
     // Vérifier si le mot de passe contient le prénom
-    if (password.includes(prenom)) {
+    if (password_lowercase.includes(prenom)) {
         showPasswordError("Le mot de passe ne peut pas contenir votre prénom");
         return false;
     }
     // Vérifier si le mot de passe contient le nom
-    if (password.includes(nom)) {
+    if (password_lowercase.includes(nom)) {
         showPasswordError("Le mot de passe ne peut pas contenir votre nom");
         return false;
     }
     // Vérifier si le mot de passe contient le surnom/nom d'utilisateur
-    if (password.includes(surnom)) {
+    if (password_lowercase.includes(surnom)) {
         showPasswordError("Le mot de passe ne peut pas contenir votre nom d'utilisateur");
         return false;
     }
