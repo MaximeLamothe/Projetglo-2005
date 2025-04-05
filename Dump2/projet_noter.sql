@@ -16,33 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `livres`
+-- Table structure for table `noter`
 --
 
-DROP TABLE IF EXISTS `livres`;
+DROP TABLE IF EXISTS `noter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `livres` (
-  `lid` int NOT NULL,
-  `titre` varchar(255) DEFAULT NULL,
-  `genre` varchar(50) NOT NULL,
-  `annee` int DEFAULT NULL,
-  `maison_edition` varchar(255) DEFAULT NULL,
-  `couverture` varchar(50) DEFAULT NULL,
-  `nombre_de_pages` int DEFAULT NULL,
-  `note` decimal(3,2) DEFAULT NULL,
-  PRIMARY KEY (`lid`)
+CREATE TABLE `noter` (
+  `idlecteur` int NOT NULL,
+  `idlivre` int NOT NULL,
+  `note` int DEFAULT NULL,
+  PRIMARY KEY (`idlecteur`,`idlivre`),
+  KEY `idlivre` (`idlivre`),
+  CONSTRAINT `noter_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `noter_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE,
+  CONSTRAINT `noter_chk_1` CHECK ((`note` between 1 and 10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `livres`
+-- Dumping data for table `noter`
 --
 
-LOCK TABLES `livres` WRITE;
-/*!40000 ALTER TABLE `livres` DISABLE KEYS */;
-INSERT INTO `livres` VALUES (1,'Les Misérables','Roman',1862,'Gallimard','l1.jpg',1232,4.00),(2,'Le Tour du monde en 80 jours','Aventure',1873,'Hachette','l2.jpg',320,1.00),(3,'1984','Dystopie',1949,'Secker & Warburg','l3.jpg',328,NULL),(4,'Pride and Prejudice','Romance',1813,'T. Egerton','l4.jpg',432,NULL),(5,'Notre-Dame de Paris','Roman',1831,'Librairie Gosselin','l5.jpg',940,NULL),(6,'Vingt Mille Lieues sous les mers','Science-fiction',1870,'Pierre-Jules Hetzel','l6.jpg',672,NULL);
-/*!40000 ALTER TABLE `livres` ENABLE KEYS */;
+LOCK TABLES `noter` WRITE;
+/*!40000 ALTER TABLE `noter` DISABLE KEYS */;
+INSERT INTO `noter` VALUES (1,1,5),(1,2,1),(2,1,3);
+/*!40000 ALTER TABLE `noter` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -53,18 +52,13 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `update_auteur_note` AFTER UPDATE ON `livres` FOR EACH ROW UPDATE auteurs A
-SET A.note = (
-    SELECT IFNULL(AVG(L.note), 0)
-    FROM livres L
-    JOIN ecrire E ON L.lid = E.idlivre
-    WHERE E.idauteur = A.aid
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `update_livre_note` AFTER INSERT ON `noter` FOR EACH ROW UPDATE livres L
+SET L.note = (
+    SELECT IFNULL(AVG(N.note), 0) 
+    FROM noter N 
+    WHERE N.idlivre = L.lid
 )
-WHERE A.aid IN (
-    SELECT E.idauteur
-    FROM ecrire E
-    WHERE E.idlivre = NEW.lid
-) */;;
+WHERE L.lid = NEW.idlivre */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -80,4 +74,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-02 19:58:33
+-- Dump completed on 2025-04-05  4:22:56

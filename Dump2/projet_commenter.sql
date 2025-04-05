@@ -16,32 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `auteurs`
+-- Table structure for table `commenter`
 --
 
-DROP TABLE IF EXISTS `auteurs`;
+DROP TABLE IF EXISTS `commenter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `auteurs` (
-  `aid` int NOT NULL,
-  `prenom` varchar(50) NOT NULL,
-  `nom` varchar(50) NOT NULL,
-  `surnom` varchar(50) NOT NULL,
-  `specialite` varchar(50) NOT NULL,
-  `photo` varchar(50) DEFAULT NULL,
-  `note` decimal(3,2) DEFAULT NULL,
-  PRIMARY KEY (`aid`)
+CREATE TABLE `commenter` (
+  `idlecteur` int NOT NULL,
+  `idlivre` int NOT NULL,
+  `idcommentaire` int NOT NULL,
+  PRIMARY KEY (`idlecteur`,`idlivre`,`idcommentaire`),
+  KEY `idlivre` (`idlivre`),
+  KEY `idcommentaire` (`idcommentaire`),
+  KEY `commentaires` (`idlivre`,`idlecteur`),
+  CONSTRAINT `commenter_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `commenter_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE,
+  CONSTRAINT `commenter_ibfk_3` FOREIGN KEY (`idcommentaire`) REFERENCES `commentaires` (`cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `auteurs`
+-- Dumping data for table `commenter`
 --
 
-LOCK TABLES `auteurs` WRITE;
-/*!40000 ALTER TABLE `auteurs` DISABLE KEYS */;
-INSERT INTO `auteurs` VALUES (1,'Victor','Hugo','VHugo','Roman','a1.jpg',4.00),(2,'Jules','Verne','JVerne','Science-fiction','a2.jpg',1.00),(3,'George','Orwell','GOrwell','Dystopie','a3.jpg',0.00),(4,'Jane','Austen','JAusten','Romance','a4.jpg',0.00);
-/*!40000 ALTER TABLE `auteurs` ENABLE KEYS */;
+LOCK TABLES `commenter` WRITE;
+/*!40000 ALTER TABLE `commenter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `commenter` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-02 19:58:33
+-- Dump completed on 2025-04-05  4:22:56

@@ -16,30 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ecrire`
+-- Table structure for table `auteurs`
 --
 
-DROP TABLE IF EXISTS `ecrire`;
+DROP TABLE IF EXISTS `auteurs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ecrire` (
-  `idauteur` int NOT NULL,
-  `idlivre` int NOT NULL,
-  PRIMARY KEY (`idauteur`,`idlivre`),
-  KEY `idlivre` (`idlivre`),
-  CONSTRAINT `ecrire_ibfk_1` FOREIGN KEY (`idauteur`) REFERENCES `auteurs` (`aid`) ON DELETE CASCADE,
-  CONSTRAINT `ecrire_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE
+CREATE TABLE `auteurs` (
+  `aid` int NOT NULL,
+  `prenom` varchar(50) NOT NULL,
+  `nom` varchar(50) NOT NULL,
+  `surnom` varchar(50) NOT NULL,
+  `specialite` varchar(50) NOT NULL,
+  `photo` varchar(50) DEFAULT NULL,
+  `note` decimal(3,2) DEFAULT NULL,
+  PRIMARY KEY (`aid`),
+  KEY `nomAuteur` (`nom`,`prenom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ecrire`
+-- Dumping data for table `auteurs`
 --
 
-LOCK TABLES `ecrire` WRITE;
-/*!40000 ALTER TABLE `ecrire` DISABLE KEYS */;
-INSERT INTO `ecrire` VALUES (1,1),(2,2),(3,3),(4,4),(1,5),(2,6);
-/*!40000 ALTER TABLE `ecrire` ENABLE KEYS */;
+LOCK TABLES `auteurs` WRITE;
+/*!40000 ALTER TABLE `auteurs` DISABLE KEYS */;
+INSERT INTO `auteurs` VALUES (1,'Victor','Hugo','VHugo','Roman','a1.jpg',4.00),(2,'Jules','Verne','JVerne','Science-fiction','a2.jpg',1.00),(3,'George','Orwell','GOrwell','Dystopie','a3.jpg',0.00),(4,'Jane','Austen','JAusten','Romance','a4.jpg',0.00);
+/*!40000 ALTER TABLE `auteurs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-02 19:58:33
+-- Dump completed on 2025-04-05  4:22:57

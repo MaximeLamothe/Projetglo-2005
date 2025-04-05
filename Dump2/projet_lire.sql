@@ -16,30 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `repondre`
+-- Table structure for table `lire`
 --
 
-DROP TABLE IF EXISTS `repondre`;
+DROP TABLE IF EXISTS `lire`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `repondre` (
-  `idcommentaireparent` int NOT NULL,
-  `idcommentairereponse` int NOT NULL,
-  PRIMARY KEY (`idcommentaireparent`,`idcommentairereponse`),
-  KEY `idcommentairereponse` (`idcommentairereponse`),
-  CONSTRAINT `repondre_ibfk_1` FOREIGN KEY (`idcommentaireparent`) REFERENCES `commentaires` (`cid`) ON DELETE CASCADE,
-  CONSTRAINT `repondre_ibfk_2` FOREIGN KEY (`idcommentairereponse`) REFERENCES `commentaires` (`cid`) ON DELETE CASCADE
+CREATE TABLE `lire` (
+  `idlecteur` int NOT NULL,
+  `idlivre` int NOT NULL,
+  `statut` enum('à lire','en cours','lu') NOT NULL DEFAULT 'à lire',
+  PRIMARY KEY (`idlecteur`,`idlivre`),
+  KEY `idlivre` (`idlivre`),
+  KEY `lire` (`idlecteur`,`idlivre`),
+  KEY `lirearbre` (`idlecteur`,`idlivre`,`statut`) USING BTREE,
+  CONSTRAINT `lire_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `lire_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `repondre`
+-- Dumping data for table `lire`
 --
 
-LOCK TABLES `repondre` WRITE;
-/*!40000 ALTER TABLE `repondre` DISABLE KEYS */;
-INSERT INTO `repondre` VALUES (2,3);
-/*!40000 ALTER TABLE `repondre` ENABLE KEYS */;
+LOCK TABLES `lire` WRITE;
+/*!40000 ALTER TABLE `lire` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lire` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-02 19:58:33
+-- Dump completed on 2025-04-05  4:22:56

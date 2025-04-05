@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `commentaires`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `commentaires` (
-  `cid` int NOT NULL,
+  `cid` int NOT NULL AUTO_INCREMENT,
   `idlecteur` int DEFAULT NULL,
   `idlivre` int DEFAULT NULL,
   `contenu` varchar(500) DEFAULT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `commentaires` (
   KEY `idlivre` (`idlivre`),
   CONSTRAINT `commentaires_ibfk_1` FOREIGN KEY (`idlecteur`) REFERENCES `lecteurs` (`id`) ON DELETE CASCADE,
   CONSTRAINT `commentaires_ibfk_2` FOREIGN KEY (`idlivre`) REFERENCES `livres` (`lid`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,4 +77,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-02 19:58:33
+-- Dump completed on 2025-04-05  4:22:56
