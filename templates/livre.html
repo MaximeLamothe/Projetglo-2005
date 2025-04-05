@@ -39,16 +39,9 @@
                 {% endif %}
             </form>
 
+            <div style="height: 25px;"></div>
+
             <!-- Formulaire pour noter le livre -->
-            <div class="rating">
-                {% for i in range(5) %}
-                    {% if i < note_actuelle %}
-                        <span class="star checked" style="font-size: 20px;">&#9733;</span>
-                    {% else %}
-                        <span class="star" style="font-size: 20px;">&#9733;</span>
-                    {% endif %}
-                {% endfor %}
-            </div>
             <form action="{{ url_for('livre_details', lid=livre.lid) }}" method="POST">
                 <select name="rating" id="rating">
                     <option value="1" {% if note_actuelle == 1 %}selected{% endif %}>1</option>
@@ -59,6 +52,16 @@
                 </select>
                 <button type="submit" class="note-button" style="font-size: 20px;">Noter</button>
             </form>
+            <!-- Affiche la note que l'utilisateur à donné -->
+            <div class="rating">
+                {% for i in range(5) %}
+                    {% if i < note_actuelle %}
+                        <span class="star checked" style="font-size: 20px;">&#9733;</span>
+                    {% else %}
+                        <span class="star" style="font-size: 20px;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
 
         </div>
@@ -79,26 +82,58 @@
 </div>
 
     <!-- Section pour ajouter un commentaire -->
-    <div class="comment-section">
-        <h3>Écrire un commentaire :</h3>
-        <form action="/ajouter_commentaire" method="POST">
-            <textarea class= "textarea" name="contenu" required></textarea>
-            <div class="droite" style="padding-right: 57px;">
-                <button type="submit">Commenter</button>
-            </div>
-        </form>
-    </div>
+<div class="comment-section">
+    <h3>Écrire un commentaire :</h3>
+    <form action="/ajouter_commentaire" method="POST">
+        <textarea class="textarea" name="contenu" required placeholder="Votre avis..."></textarea>
+        <input type="hidden" id="reponsecid" name="reponsecid" value="">
+        <p id="replying-to" class="info-text" style="margin-top: 10px;"></p>
+        <div class="droite" style="padding-right: 57px; margin-top: 10px;">
+            <button type="submit">Commenter</button>
+        </div>
+    </form>
+</div>
 
-    <!-- Section des commentaires -->
-    <div class="comments">
-        <h3>Commentaires :</h3>
+<hr style="margin: 40px 0;">
+
+<!-- Section des commentaires -->
+<div class="comments">
+    <h3>Commentaires :</h3>
+    {% if commentaires %}
         {% for commentaire in commentaires %}
             <div class="comment">
-                <p class="comment-content">{{ commentaire.contenu }}</p>
-                <p class="comment-author"><strong>{{ commentaire.prenom }} {{commentaire.nom}}</strong></p>
-                <a class = "info-text" href="/repondre/{{ commentaire.reponse }}">Répondre</a>
+                <div class="comment-header">
+                    <strong>{{ commentaire.prenom }} {{ commentaire.nom }}</strong>
+                </div>
+                <div class="comment-content">
+                    {{ commentaire.contenu }}
+                </div>
+                {% if commentaire.reponse %}
+                <div class="comment-reply-info">
+                    ↳ Réponse à
+                    <strong>{{ commentaire.prenom_reponse }} {{ commentaire.nom_reponse }}</strong>
+                </div>
+                {% endif %}
+
+                <a href="#" class="info-text" onclick="setReponse({{ commentaire.cid }}, '{{ commentaire.prenom }} {{ commentaire.nom }}')">Répondre</a>
             </div>
         {% endfor %}
-    </div>
+    {% else %}
+        <p class="info-text">Aucun commentaire pour l’instant.</p>
+    {% endif %}
 </div>
+
+
+    <script>
+    function setReponse(cid, nom) {
+        document.getElementById("reponsecid").value = cid;
+        document.getElementById("replying-to").textContent = "Vous répondez à " + nom;
+        window.scrollTo({ top: document.querySelector(".comment-section").offsetTop, behavior: 'smooth' });
+    }
+</script>
+
+
+
+
+
 {% endblock %}
