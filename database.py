@@ -96,7 +96,7 @@ class Database:
             print(f"Erreur lors de la récupération des commentaires : {e}")
             return []
 
-    def search_books(self, auteur=None, annee=None, titre=None, maison=None, filtre=None):
+    def search_books(self, auteur=None, annee=None, titre=None, maison=None, genre =None, filtre=None):
         try:
             # Construction de la requête dynamique
             query = ("SELECT * FROM livres, ecrire, auteurs "
@@ -118,6 +118,10 @@ class Database:
                 query += " AND maison_edition LIKE %s"
                 params.append(f"%{maison}%")
 
+            if genre:
+                query += " AND genre = %s"
+                params.append(genre)
+
             if filtre:
                 if filtre == "annee_croissant":
                     query += " ORDER BY annee ASC"
@@ -135,6 +139,18 @@ class Database:
         except Exception as e:
             print(f"Error while searching books: {e}")
             return None
+
+    def get_all_genres(self):
+        try:
+            request = f"""
+            SELECT DISTINCT genre FROM livres
+            """
+            self.cursor.execute(request)
+            genres = self.cursor.fetchall()
+            return [row[0] for row in genres]
+        except Exception as e:
+            print(f"Erreur en récupérant les genres : {e}")
+            return []
 
     def get_user_info(self, id):
         try:

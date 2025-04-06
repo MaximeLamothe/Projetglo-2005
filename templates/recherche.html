@@ -18,6 +18,17 @@
 
         <label for="maison">Maison d'édition :</label>
         <input type="text" id="maison" name="maison" value="{{ request.form.get('maison', '') }}">
+
+        <label for="genre">Genre :</label>
+        <select id="genre" name="genre" style="padding: 10px; font-size: 16px;" class="input-select">
+            <option value="">-- Tous les genres --</option>
+            {% for g in genres %}
+                <option value="{{ g }}" {% if request.form.get('genre') == g %}selected{% endif %}>{{ g }}</option>
+            {% endfor %}
+        </select>
+
+</select>
+
     </div>
 
         <div class="filter-options">

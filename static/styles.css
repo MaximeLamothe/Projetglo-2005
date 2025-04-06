@@ -263,3 +263,13 @@ h1.centre {
     margin-bottom: 5px;
     font-style: italic;
 }
+
+.input-select {
+    background-color: white;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.input-select:hover {
+    background-color: lightgray;
+}

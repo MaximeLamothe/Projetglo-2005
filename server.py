@@ -231,18 +231,21 @@ def profil():
 @app.route('/recherche/', methods=['GET', 'POST'])
 def recherche():
     if "prenom" in session:
+        genres = database.get_all_genres()
+
         if request.method == 'POST':
             auteur = request.form.get('auteur', '')
             annee = request.form.get('annee', '')
             titre = request.form.get('titre', '')
             maison = request.form.get('maison', '')
+            genre = request.form.get('genre', '')
             filtre = request.form.get('filtre', '')
 
-            livres_trouves = database.search_books(auteur, annee, titre, maison, filtre)
+            livres_trouves = database.search_books(auteur, annee, titre, maison, genre, filtre)
         else:
             livres_trouves = []
 
-        return render_template('recherche.html', livres=livres_trouves)
+        return render_template('recherche.html', livres=livres_trouves, genres=genres)
     else:
         return redirect(url_for('login'))
 @app.route('/livre/<int:lid>', methods=['GET', 'POST'])

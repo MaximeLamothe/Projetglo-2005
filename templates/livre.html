@@ -29,7 +29,7 @@
                     <button type="submit" class="retirer" style="font-size: 20px;">Retirer de ma bibliothèque</button>
                 {% else %}
 
-                    <select name="statut" id="statut" required>
+                    <select name="statut" id="statut" class="input-select" required>
                         <option value="a lire" {% if statut =='a_lire' %}selected{% endif %}>À lire</option>
                         <option value="lu" {% if statut =='lu' %}selected{% endif %}>Lu</option>
                         <option value="en cours" {% if statut =='a_acheter' %}selected{% endif %}>En cours</option>
@@ -43,7 +43,7 @@
 
             <!-- Formulaire pour noter le livre -->
             <form action="{{ url_for('livre_details', lid=livre.lid) }}" method="POST">
-                <select name="rating" id="rating">
+                <select name="rating" id="rating" class="input-select">
                     <option value="1" {% if note_actuelle == 1 %}selected{% endif %}>1</option>
                     <option value="2" {% if note_actuelle == 2 %}selected{% endif %}>2</option>
                     <option value="3" {% if note_actuelle == 3 %}selected{% endif %}>3</option>
