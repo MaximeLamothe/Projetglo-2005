@@ -1,125 +1,66 @@
+<!--
+    Cette page représente la bibliothèque personnelle de l'utilisateur, où sont affichés
+    les livres et auteurs associés à son compte.
+    Elle est divisée en sections qui regroupent les livres en fonction de leur statut.
+    La section "Auteurs favoris" affiche les auteurs préférés de l'utilisateur.
+-->
+
+
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="library-header centre">
-        <h1>Votre Bibliothèque</h1>
-    </div>
+<div class="library-header centre">
+    <h1>Votre Bibliothèque</h1>
+</div>
 
-    <div class="library-sections">
-        <!-- Section "Lus" -->
-        <div class="library-section">
-            <h2>Livres lus</h2>
-            <p class="info-text">{{ livres_lus_count }} livre(s) lu(s)</p>
-            <div class="book-grid">
-                {% for livre in livres_lus %}
-                    <div class="book-card row">
-                    <div class="book-cover">
-                        <!-- Afficher la couverture du livre ici si disponible -->
-                        <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture">
-                        <div style="height: 50px;"></div>
-                    </div>
-                    <div class="book-info" style="padding-left: 40px">
-                    <div class="book-genre">{{ livre[2] }}</div>
-                        <div style="height: 50px;"></div>
-                    <div class="book-title">
-                        <a href="{{ url_for('livre_details', lid=livre[0]) }}">
-                            <strong>{{ livre[1] }}</strong>
-                        </a>
-                    </div>
-                        <div style="height: 50px;"></div>
-                    <div class="book-annee">{{ livre[3] }}</div>
-                    </div>
+<div class="library-sections" style="padding: 20px;">
+    {% macro render_book_card(livre) %}
+        <div class="book-card" style="display: flex; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px; width: 28%; margin-bottom: 25px;">
+            <div class="book-cover">
+                <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture"
+                     style="width: 90px; height: 130px; object-fit: cover; border-radius: 10px;">
+            </div>
+            <div class="book-info" style="padding-left: 20px;">
+                <div class="book-genre info-text" style="font-size: 14px;">{{ livre[2] }}</div>
+                <div class="book-title" style="font-size: 16px; font-weight: bold; margin: 5px 0;">
+                    <a href="{{ url_for('livre_details', lid=livre[0]) }}">{{ livre[1] }}</a>
                 </div>
+                <div class="book-annee" style="font-size: 14px;">{{ livre[3] }}</div>
+            </div>
+        </div>
+    {% endmacro %}
+
+    {% macro render_author_card(auteur) %}
+        <div class="book-card" style="display: flex; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 15px; width: 28%; margin-bottom: 25px;">
+            <div class="book-cover">
+                <img src="{{ url_for('static', filename='Photos/' + auteur.photo) }}" alt="Photo de l'auteur"
+                     style="width: 90px; height: 90px; object-fit: cover; border-radius: 50%;">
+            </div>
+            <div class="auteur-info" style="padding-left: 20px;">
+                <span style="font-size: 14px;">({{ auteur.surnom }})</span><br>
+                <strong style="font-size: 16px;">
+                    <a href="{{ url_for('auteur', auteur_id=auteur.id) }}">{{ auteur.prenom }} {{ auteur.nom }}</a>
+                </strong><br>
+                <span style="font-size: 14px;">Spécialité : {{ auteur.specialite }}</span>
+            </div>
+        </div>
+    {% endmacro %}
+
+    {% macro render_section(titre, count, objets, render_macro) %}
+        <div class="library-section" style="margin-bottom: 50px;">
+            <h2>{{ titre }}</h2>
+            <p class="info-text">{{ count }}</p>
+            <div class="book-grid" style="display: flex; flex-wrap: wrap; gap: 2%; justify-content: space-between;">
+                {% for obj in objets %}
+                    {{ render_macro(obj) }}
                 {% endfor %}
             </div>
         </div>
+    {% endmacro %}
 
-        <!-- Section "À lire" -->
-        <div class="library-section">
-            <h2>Livres à lire</h2>
-            <p class="info-text">{{ livres_a_lire_count }} livre(s) à lire</p>
-            <div class="book-grid">
-                {% for livre in livres_a_lire %}
-                    <div class="book-card row">
-                    <div class="book-cover">
-                        <!-- Afficher la couverture du livre ici si disponible -->
-                        <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture">
-                        <div style="height: 50px;"></div>
-                    </div>
-                    <div class="book-info" style="padding-left: 40px">
-                    <div class="book-genre">{{ livre[2] }}</div>
-                        <div style="height: 50px;"></div>
-                    <div class="book-title">
-                        <a href="{{ url_for('livre_details', lid=livre[0]) }}">
-                            <strong>{{ livre[1] }}</strong>
-                        </a>
-                    </div>
-                        <div style="height: 50px;"></div>
-                    <div class="book-annee">{{ livre[3] }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Section "À acheter" -->
-        <div class="library-section">
-            <h2>Livres en cours de lecture</h2>
-            <p class="info-text">{{ livres_a_acheter_count }} livre(s) en cours </p>
-            <div class="book-grid">
-                {% for livre in livres_a_acheter %}
-                    <div class="book-card row">
-                    <div class="book-cover">
-                        <!-- Afficher la couverture du livre ici si disponible -->
-                        <img src="{{ url_for('static', filename='Photos/l' ~ livre[0] ~ '.jpg') }}" alt="Couverture">
-                        <div style="height: 50px;"></div>
-                    </div>
-                    <div class="book-info" style="padding-left: 40px">
-                    <div class="book-genre">{{ livre[2] }}</div>
-                        <div style="height: 50px;"></div>
-                    <div class="book-title">
-                        <a href="{{ url_for('livre_details', lid=livre[0]) }}">
-                            <strong>{{ livre[1] }}</strong>
-                        </a>
-                    </div>
-                        <div style="height: 50px;"></div>
-                    <div class="book-annee">{{ livre[3] }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Section "Auteurs favoris" -->
-        <div class="library-section">
-            <h2>Auteurs favoris</h2>
-            <p class="info-text">{{ auteurs_favoris|length }} auteur(s) favori(s)</p>
-            <div class="book-grid">
-                {% for auteur in auteurs_favoris %}
-                    <div class="book-card row">
-                        <div class="book-cover img">
-                            <!-- Afficher la photo de l'auteur -->
-                            <img src="{{ url_for('static', filename='Photos/'+auteur.photo) }}" alt="Photo de l'auteur">
-                            <div style="height: 50px;"></div>
-                        </div>
-
-                        <div class="auteur-info" style=" padding-left: 40px">
-                            <div style="height: 50px;"></div>
-                            <span>({{ auteur.surnom }})</span><br>
-                            <div style="height: 50px;"></div>
-                            <strong> <a href="{{ url_for('auteur', auteur_id=auteur.id) }}">
-                                {{ auteur.prenom }} {{ auteur.nom }}
-                            </a>
-                            </strong> <br>
-                            <div style="height: 50px;"></div>
-                            <span> Spécialité : {{ auteur.specialite }}</span><br>
-
-
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-    </div>
+    {{ render_section("📖 Livres lus", livres_lus_count ~ " livre(s)", livres_lus, render_book_card) }}
+    {{ render_section("⏳ Livres à lire", livres_a_lire_count ~ " livre(s)", livres_a_lire, render_book_card) }}
+    {{ render_section("📘 Livres en cours de lecture", livres_a_acheter_count ~ " livre(s)", livres_a_acheter, render_book_card) }}
+    {{ render_section("🌟 Auteurs favoris", auteurs_favoris|length ~ " auteur(s)", auteurs_favoris, render_author_card) }}
+</div>
 {% endblock %}

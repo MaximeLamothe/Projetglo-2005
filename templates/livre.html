@@ -21,14 +21,14 @@
             </p>
         </div>
         <div class="bouton-modification droite" style="padding-left: 200px">
-
             <!-- Formulaire pour ajouter ou retirer le livre -->
             <form action="{{ url_for('modifier_bibliotheque', lid=livre.lid) }}" method="post">
                 {% if est_dans_biblio %}
+                <div class="a" style="padding-left: 200px">
                     <input type="hidden" name="action" value="retirer">
-                    <button type="submit" class="retirer" style="font-size: 20px;">Retirer de ma bibliothèque</button>
+                    <button type="submit" class="retirer" style="font-size: 20px; ">Retirer de ma bibliothèque</button>
+                </div>
                 {% else %}
-
                     <select name="statut" id="statut" class="input-select" required>
                         <option value="a lire" {% if statut =='a_lire' %}selected{% endif %}>À lire</option>
                         <option value="lu" {% if statut =='lu' %}selected{% endif %}>Lu</option>
@@ -103,7 +103,7 @@
         {% for commentaire in commentaires %}
             <div class="comment">
                 <div class="comment-header">
-                    <strong>{{ commentaire.prenom }} {{ commentaire.nom }}</strong>
+                    <strong>{{ commentaire.surnom }}</strong>
                 </div>
                 <div class="comment-content">
                     {{ commentaire.contenu }}
@@ -111,11 +111,11 @@
                 {% if commentaire.reponse %}
                 <div class="comment-reply-info">
                     ↳ Réponse à
-                    <strong>{{ commentaire.prenom_reponse }} {{ commentaire.nom_reponse }}</strong>
+                    <strong>{{ commentaire.surnom_reponse }}</strong>
                 </div>
                 {% endif %}
 
-                <a href="#" class="info-text" onclick="setReponse({{ commentaire.cid }}, '{{ commentaire.prenom }} {{ commentaire.nom }}')">Répondre</a>
+                <a href="#" class="info-text" onclick="setReponse({{ commentaire.cid }}, '{{ commentaire.surnom }}')">Répondre</a>
             </div>
         {% endfor %}
     {% else %}

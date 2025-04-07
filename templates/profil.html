@@ -1,3 +1,10 @@
+<!--
+    Cette page affiche le profil de l'utilisateur, incluant ses informations personnelles.
+    Un résumé des livres lus par l'utilisateur est également présenté, avec le nombre total de livres lus.
+    Les informations sont affichées dans un conteneur centralisé rondie pour améliorer la lisibilité.
+-->
+
+
 {% extends "base.html" %}
 
 {% block title %}Profil Utilisateur{% endblock %}
@@ -5,14 +12,17 @@
 {% block content %}
 <h1 class="centre">Profil de {{ prenom }} {{ nom }}</h1>
 
-<div class="container centre">
-    <div class="user-info">
+<div class="container centre" style="max-width: 600px; margin: 0 auto; padding: 30px; background-color: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    <div class="user-info" style="text-align: center;">
         <p><strong>Prénom :</strong> <span class="info-text">{{ prenom }}</span></p>
         <p><strong>Nom :</strong> <span class="info-text">{{ nom }}</span></p>
         <p><strong>Courriel :</strong> <span class="info-text">{{ email }}</span></p>
         <p><strong>Surnom :</strong> <span class="info-text">{{ surnom }}</span></p>
         <p><strong>Âge :</strong> <span class="info-text">{{ age }} ans</span></p>
         <p><strong>Sexe :</strong> <span class="info-text">{{ sexe }}</span></p>
+        <hr>
+        <p style="font-size: 18px;"><strong>Bravo !</strong> Vous avez lu <span class="info-text">{{ livres_lus_count }} livre(s)</span> 📚</p>
     </div>
 </div>
 {% endblock %}
+

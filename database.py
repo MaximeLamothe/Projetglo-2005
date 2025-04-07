@@ -1,3 +1,6 @@
+### Ce fichier contient les fonctions nécessaires pour interagir avec la base de données,
+### y compris la gestion des utilisateurs, des livres, des auteurs et des commentaires.
+
 import os
 
 import pymysql
@@ -65,8 +68,8 @@ class Database:
     def get_comments_for_book(self, lid):
         try:
             query = """
-                SELECT c.cid, c.contenu, l.prenom, l.nom, c.réponsecid,
-                       l2.prenom AS prenom_reponse, l2.nom AS nom_reponse
+                SELECT c.cid, c.contenu, l.surnom, c.réponsecid,
+                       l2.surnom AS surnom_reponse, l2.nom AS nom_reponse
                 FROM commentaires c
                 JOIN lecteurs l ON c.idlecteur = l.id
                 LEFT JOIN commentaires c2 ON c.réponsecid = c2.cid
@@ -84,11 +87,9 @@ class Database:
                 {
                     'cid': comment[0],
                     'contenu': comment[1],
-                    'prenom': comment[2],
-                    'nom': comment[3],
-                    'reponse': comment[4],  # cid auquel on répond
-                    'prenom_reponse': comment[5],  # prénom du lecteur d’origine
-                    'nom_reponse': comment[6]  # nom du lecteur d’origine
+                    'surnom': comment[2],
+                    'reponse': comment[3],  # cid auquel on répond
+                    'surnom_reponse': comment[4],  # surnom du lecteur d’origine
                 }
                 for comment in comments
             ]
@@ -96,6 +97,7 @@ class Database:
             print(f"Erreur lors de la récupération des commentaires : {e}")
             return []
 
+    # Fonction pour chercher les livres selon les champs remplis par l'utilisateur
     def search_books(self, auteur=None, annee=None, titre=None, maison=None, genre =None, filtre=None):
         try:
             # Construction de la requête dynamique
@@ -140,6 +142,7 @@ class Database:
             print(f"Error while searching books: {e}")
             return None
 
+    # Fonction pour récupérer tout les genres des livres contenues dans la base de donnee
     def get_all_genres(self):
         try:
             request = f"""
@@ -152,6 +155,7 @@ class Database:
             print(f"Erreur en récupérant les genres : {e}")
             return []
 
+    # Fonction pour récupérer les informations sur l'utilisateur connecté
     def get_user_info(self, id):
         try:
             request = f"""
@@ -177,6 +181,7 @@ class Database:
             print(f"Error while fetching user info: {e}")
             return None
 
+    # Fonction pour récupérer les livres d'un lecteur selon son statut de lecture
     def get_books_by_status(self, user_id, statut):
         try:
             request = f"""
@@ -223,6 +228,7 @@ class Database:
             print(f"Erreur en recherchant les informations de l'auteur: {e}")
             return None
 
+    # Fonction pour ajouter un auteur favoris à un lecteur
     def add_favorite_author(self, aid, lid):
         try:
             request = """INSERT INTO auteurpreferer VALUES (%s, %s);"""
@@ -234,6 +240,7 @@ class Database:
             print(f"Erreur en ajoutant l'auteur {aid} aux favoris: {e}")
             return False
 
+    # Fonction pour enlever un auteur favoris d'un lecteur
     def remove_favorite_author(self, aid, lid):
         try:
             request = """DELETE FROM auteurpreferer WHERE idauteur=%s AND idlecteur=%s ;"""
@@ -320,6 +327,7 @@ class Database:
             print(f"Erreur en ajoutant l'utilisateur {surnom} : {e}")
             return False
 
+    # Fonction pour récupérer les livres qu'un auteur a ecrit
     def get_books_by_author(self, aid):
         try:
             request = f"""
@@ -336,6 +344,7 @@ class Database:
             print(f"Error while fetching books by author: {e}")
             return None
 
+    # Fonction pour récupérer les auteurs favoris d'un utilisateur
     def get_favorite_author_ids(self, lid):
         try:
             query = "SELECT idauteur FROM auteurpreferer WHERE idlecteur = %s"
@@ -345,6 +354,7 @@ class Database:
             print(f"Erreur en récupérant les auteurs favoris : {e}")
             return []
 
+    # Fonction pour determiner si un livre en particulier est dans la bibliotheque d'un utilisateur
     def is_book_in_library(self, lid, book_id):
         try:
             request = "SELECT COUNT(*) FROM lire WHERE idlecteur = %s AND idlivre = %s"
@@ -354,6 +364,7 @@ class Database:
             print(f"Erreur en vérifiant si le livre {book_id} est dans la bibliothèque de {lid}: {e}")
             return False
 
+    # Fonction pour récupérer le statut de lecture d'un livre
     def get_book_status(self, lid, book_id):
         try:
             request = """SELECT statut FROM lire WHERE idlecteur = %s AND idlivre = %s"""
@@ -364,6 +375,7 @@ class Database:
             print(f"Erreur en récupérant le statut du livre {book_id} pour {lid}: {e}")
             return None
 
+    # Fonction pour ajouter un livre a la bibliotheque d'un utilisateur
     def add_book_to_library(self, lid, book_id, statut):
         try:
             request = """INSERT INTO lire (idlecteur, idlivre, statut) VALUES (%s, %s, %s);"""
@@ -374,6 +386,7 @@ class Database:
             print(f"Erreur en ajoutant le livre {book_id} à la bibliothèque de {lid}: {e}")
             return False
 
+    # Fonction pour enlever un livre de la bibliotheque d'un utilisateur
     def remove_book_from_library(self, lid, book_id):
         try:
             request = """DELETE FROM lire WHERE idlecteur=%s AND idlivre=%s;"""
@@ -384,6 +397,7 @@ class Database:
             print(f"Erreur en retirant le livre {book_id} de la bibliothèque de {lid}: {e}")
             return False
 
+    # Fonction pour faire modifier ou ajouter une note a un livre qu'un utilisateur lui a mis
     def ajouter_ou_mettre_a_jour_note(self, lid, utilisateur_id, note):
         try:
             # Vérifier si l'utilisateur a déjà noté ce livre
@@ -412,6 +426,7 @@ class Database:
             print(f"Erreur lors de l'ajout ou de la mise à jour de la note: {e}")
             return False
 
+    # Fonction pour récupérer la note qu'a mis un utilisateur a un livre
     def recuperer_note_utilisateur_pour_livre(self, lid, utilisateur_id):
         try:
             requete = """
@@ -427,6 +442,7 @@ class Database:
             print(f"Erreur lors de la récupération de la note pour le livre {lid}: {e}")
             return None
 
+    # Fonction pour ajouter le commentaire d'un utilisateur sur un livre
     def ajouter_commentaire(self, utilisateur_id, livre_id, contenu, reponsecid=None):
         try:
             requete = """

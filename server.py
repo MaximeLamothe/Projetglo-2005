@@ -1,3 +1,5 @@
+### Ce fichier contient les routes et la logique du serveur pour gérer les interactions de l'utilisateur
+
 import re
 from flask import Flask, render_template, Response, request, redirect, url_for, session, flash
 import password_hash
@@ -223,8 +225,13 @@ def profil():
         # Récupérer les informations de l'utilisateur
         user_info = database.get_user_info(lid)
 
+
+        # Récupérer les livres pour chaque statut
+        livres_lus = database.get_books_by_status(lid, 'lu')
+        livres_lus_count = len(livres_lus)
+
         # Rendre la page de profil avec les informations récupérées
-        return render_template('profil.html', **user_info)
+        return render_template('profil.html', **user_info, livres_lus_count=livres_lus_count,)
 
     else:
         return redirect(url_for('login'))

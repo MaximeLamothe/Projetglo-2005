@@ -1,3 +1,11 @@
+/*
+    Ce script gère la validation du formulaire d'inscription.
+    Lors de la soumission du formulaire, il vérifie que l'adresse email et
+    le mot de passe respectent les critères de validité.
+    - Si l'une des validations échoue, la soumission du formulaire est empêchée et un message d'erreur est affiché.
+*/
+
+
 // Fonction qui relie les fonctions de validation de courriel et de mot de passe à la soumission du formulaire
 document.addEventListener("DOMContentLoaded", function () {
     let registerForm = document.getElementById("registerForm");
