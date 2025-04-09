@@ -21,7 +21,12 @@
         <p><strong>Âge :</strong> <span class="info-text">{{ age }} ans</span></p>
         <p><strong>Sexe :</strong> <span class="info-text">{{ sexe }}</span></p>
         <hr>
-        <p style="font-size: 18px;"><strong>Bravo !</strong> Vous avez lu <span class="info-text">{{ livres_lus_count }} livre(s)</span> 📚</p>
+        {% if livres_lus_count > 0 %}
+            <p style="font-size: 18px;"><strong>Bravo !</strong> Vous avez lu <span class="info-text">{{ livres_lus_count }} livre(s)</span> 📚</p>
+        {% else %}
+            <p style="font-size: 18px;">Aucun livre lu pour l’instant! 📚</p>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

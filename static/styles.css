@@ -186,7 +186,15 @@ h1.centre {
     max-width: 200px; /* Limite la largeur de l'image à 200px */
     max-height: 300px; /* Limite la hauteur de l'image à 300px */
     object-fit: cover; /* Redimensionne l'image pour la remplir tout en gardant son ratio */
-    padding-left: 30px;
+
+    border-radius: 12px;           /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);  /* Ombre douce */
+    display: flex;
+    justify-content: center;
+    align-items: center;display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .textarea {
