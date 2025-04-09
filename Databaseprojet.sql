@@ -21,4 +21,15 @@ select * from ecrire;
 
 use projet;
 
-
+DELIMITER ;;
+CREATE TRIGGER update_livre_note_after_update
+AFTER UPDATE ON noter
+FOR EACH ROW
+    UPDATE livres
+    SET note = (
+        SELECT IFNULL(AVG(note), 0)
+        FROM noter
+        WHERE idlivre = NEW.idlivre
+    )
+    WHERE lid = NEW.idlivre;
+DELIMITER ;

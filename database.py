@@ -400,26 +400,12 @@ class Database:
     # Fonction pour faire modifier ou ajouter une note a un livre qu'un utilisateur lui a mis
     def ajouter_ou_mettre_a_jour_note(self, lid, utilisateur_id, note):
         try:
-            # Vérifier si l'utilisateur a déjà noté ce livre
             requete = """
-                SELECT idlecteur FROM noter WHERE idlivre = %s AND idlecteur = %s
+                INSERT INTO noter (idlivre, idlecteur, note)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE note = VALUES(note)
             """
-            self.cursor.execute(requete, (lid, utilisateur_id))
-            note_existante = self.cursor.fetchone()
-
-            if note_existante:
-                # Si la note existe déjà, mettre à jour
-                requete_update = """
-                    UPDATE noter SET note = %s WHERE idlivre = %s AND idlecteur = %s
-                """
-                self.cursor.execute(requete_update, (note, lid, utilisateur_id))
-            else:
-                # Si la note n'existe pas, insérer une nouvelle note
-                requete_insert = """
-                    INSERT INTO noter (idlivre, idlecteur, note) VALUES (%s, %s, %s)
-                """
-                self.cursor.execute(requete_insert, (lid, utilisateur_id, note))
-
+            self.cursor.execute(requete, (lid, utilisateur_id, note))
             self.connection.commit()
             return True
         except Exception as e:
