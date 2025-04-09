@@ -31,7 +31,7 @@ CREATE TABLE `auteurs` (
   `photo` varchar(50) DEFAULT NULL,
   `note` decimal(3,2) DEFAULT NULL,
   PRIMARY KEY (`aid`),
-  KEY `nomAuteur` (`nom`,`prenom`)
+  KEY `nomAuteurs` (`nom`,`prenom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-08 22:42:31
+-- Dump completed on 2025-04-09 18:57:59
