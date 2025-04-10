@@ -105,7 +105,7 @@ function validateAge() {
     let errorMessage = document.getElementById("age-error-message");
 
     // vérifier que l'âge est valide (entre 5 et )
-    if (age < 5 || age > 105) {
+    if (ageInput < 5 || ageInput > 105) {
         if (errorMessage) {
             showAgeError("L'âge entré est invalide");
         }
