@@ -74,9 +74,9 @@ function validatePassword() {
         showPasswordError("Le mot de passe ne peut pas contenir votre nom");
         return false;
     }
-    // Vérifier si le mot de passe contient le surnom/nom d'utilisateur
+    // Vérifier si le mot de passe contient le surnom
     if (password_lowercase.includes(surnom)) {
-        showPasswordError("Le mot de passe ne peut pas contenir votre nom d'utilisateur");
+        showPasswordError("Le mot de passe ne peut pas contenir votre surnom");
         return false;
     }
 
