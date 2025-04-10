@@ -51,14 +51,13 @@ def login():
                 session['nombrelivreslus'] = info['nombrelivreslus']
 
                 return redirect(url_for('mabiblio'))
-
-        return render_template('login.html', message="Informations invalides!")
+        return render_template('login.html', message="Informations invalides!", courriel=courriel)
 
     # si method = GET
     else:
         if "user" in session:
             return redirect(url_for('mabiblio'))
-        return render_template('login.html')
+        return render_template('login.html', message="", courriel="")
 
 # Fonction pour afficher la page de création d'un nouveau compte
 @app.route("/creation-compte/", methods=['GET', 'POST'])
