@@ -29,7 +29,9 @@
     <p> <label for="courriel">Courriel</label><br>
         <input type="email" id="courriel" name="courriel" placeholder="Entrez votre courriel" value="{{email if email}}" required><br>
         <label for="motpasse">Mot de passe</label><br>
-        <input type="password" id="motpasse" name="motpasse" required><br>
+        <input type="password" id="motpasse" name="motpasse" required>
+        <input type="checkbox" id="show-password">
+        <label for="show-password">Afficher le mot de passe</label>
     </p>
 
     <p id="error-message" style="color: red;"></p>

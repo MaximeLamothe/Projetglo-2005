@@ -38,6 +38,7 @@
       <label for="surnom">Nom d'utilisateur</label><br>
       <input type="text" id="surnom" name="surnom" maxlength="20" required><br>
       <label for="age"> Âge</label><br>
+      <p id="age-error-message" style="color: red;"></p>
       <input type="number" id="age" name="age" min="5" max="105" required><br>
       <label for="sexe"> Sexe</label><br>
 
@@ -47,7 +48,9 @@
       <br>
 
       <label for="motpasse"> Mot de passe: </label><br>
-      <input type="password" id="motpasse" name="motpasse" minlength="6" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,}" required><br>
+      <input type="password" id="motpasse" name="motpasse" minlength="6" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,}" required>
+      <input type="checkbox" id="show-password">
+      <label for="show-password">Afficher le mot de passe</label>
       <p id="password-error-message" style="color: red;"></p>
       Le mot de passe:
       <ul>

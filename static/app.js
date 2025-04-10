@@ -1,6 +1,6 @@
 /*
     Ce script gère la validation du formulaire d'inscription.
-    Lors de la soumission du formulaire, il vérifie que l'adresse email et
+    Lors de la soumission du formulaire, il vérifie que l'adresse email, l'âge et
     le mot de passe respectent les critères de validité.
     - Si l'une des validations échoue, la soumission du formulaire est empêchée et un message d'erreur est affiché.
 */
@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!validateEmail()) {
                 event.preventDefault(); // Empêcher la soumission du formulaire si le courriel est invalide
             }
+
+            if (!validateAge()) {
+                event.preventDefault();
+             }
 
             // Validate Password
             if (!validatePassword()) {
@@ -94,3 +98,43 @@ function showPasswordError(message) {
         errorMessage.style.color = "red";
     }
 }
+
+// Fonction pour valider que l'âge est entre 5 et 105 ans
+function validateAge() {
+    let ageInput = document.getElementById("age").value;
+    let errorMessage = document.getElementById("age-error-message");
+
+    // vérifier que l'âge est valide (entre 5 et )
+    if (age < 5 || age > 105) {
+        if (errorMessage) {
+            showAgeError("L'âge entré est invalide");
+        }
+        return false;
+    } else {
+        if (errorMessage) {
+            errorMessage.textContent = ""; // Aucun message d'erreur si age valide
+        }
+        return true; // age valide
+    }
+}
+
+// Fonction pour afficher le message d'erreur pour l'âge
+function showAgeError(message) {
+    let errorMessage = document.getElementById("password-error-message");
+    if (errorMessage) {
+        errorMessage.textContent = message;
+        errorMessage.style.color = "red";
+    }
+}
+
+const passwordInput = document.getElementById('motpasse');
+const showPasswordCheckbox = document.getElementById('show-password');
+
+// Si la case est cochée, on rend le mot de passe visible
+showPasswordCheckbox.addEventListener('change', function() {
+    if (showPasswordCheckbox.checked) {
+        passwordInput.type = 'text';  // Rendre le mot de passe visible
+    } else {
+        passwordInput.type = 'password';  // Cacher le mot de passe
+    }
+});
