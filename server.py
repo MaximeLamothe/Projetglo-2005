@@ -118,20 +118,11 @@ def auteur(auteur_id):
         lid = session['id']
         auteur = database.get_author_details(auteur_id, lid)
 
+        # si l'auteur n'existe pas 
         if not auteur:
             return "Auteur non trouvé", 404
 
         livres = database.get_books_by_author(auteur_id)
-
-    # Vérifier si on a déjà l'info via l'URL
-    # est_favori = request.args.get("favori")
-
-    # if est_favori is None:  # Si l'info n'est pas passée, on fait la requête
-    #     cur.execute("SELECT COUNT(*) FROM auteurs_favoris WHERE auteur_id = %s", (auteur_id,))
-    #     est_favori = cur.fetchone()[0] > 0
-    # else:
-    #     est_favori = bool(int(est_favori))  # Convertir en booléen
-
         return render_template("auteur.html", auteur=auteur, livres=livres)
     # si aucun utilisateur connecté
     else:
@@ -155,31 +146,6 @@ def auteur_favori (auteur_id):
             return "Auteur non trouvé", 404
 
     return redirect(url_for("auteur", auteur_id=auteur_id))
-
-@app.route("/noter-auteur/<int:auteur_id>/", methods=["POST"])
-def noter_auteur(auteur_id):
-    """ Ajoute ou modifie la note de l'auteur avec un bouton radio et passe la valeur via l'URL """
-    note = int(request.form.get("note"))
-    note = int(request.form.get("note"))
-    user_id = session["user_id"]
-    cur = database.cursor()
-    existe = cur.fetchone()[0] > 0
-
-    if existe:
-        # Si l'utilisateur a déjà noté, on met à jour sa note
-        cur.execute("UPDATE notes_auteurs SET note = %s WHERE auteur_id = %s AND user_id = %s",
-                    (note, auteur_id, user_id))
-    else:
-        # Si l'utilisateur n'a pas encore noté, on insère une nouvelle ligne
-        cur.execute("INSERT INTO notes_auteurs (auteur_id, note, user_id) VALUES (%s, %s, %s)",
-                    (auteur_id, note, user_id))
-
-    database.connection.commit()
-    cur.close()
-
-    # On récupère aussi est_favori pour éviter la requête SQL dans afficher_auteur
-    # est_favori = request.args.get("favori", 0)
-    return redirect(url_for("auteur", auteur_id=auteur_id, favori=est_favori, note=note))
 
 @app.route("/mabiblio/")
 def mabiblio():
